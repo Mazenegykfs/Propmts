@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Library Manager</title>
+    <style>
+        /* Base Resets and Variables */
+        :root {
+            --bg-light: #e0f2fe;
+            --bg-dark: #bae6fd;
+            --primary-text: #0f172a;
+            --accent-blue: #0284c7;
+            --btn-green: #22c55e;
+            --btn-green-hover: #16a34a;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            color: var(--primary-text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Typography */
+        .thin-title {
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: var(--accent-blue);
+        }
+
+        /* Layout Structure */
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--bg-light);
+            background: #f8fafc;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        /* External Link at the top of the sidebar */
+        .sidebar-link {
+            background: var(--accent-blue);
+            color: white;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+        }
+
+        .sidebar-link:hover {
+            background: #0369a1;
+            color: white;
+        }
+
+        .tab-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: #f0f9ff;
+            border: 1px solid #e0f2fe;
+            color: var(--accent-blue);
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            text-align: left;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tab-btn:hover {
+            background: #e0f2fe;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+            border-color: var(--accent-blue);
+        }
+
+        /* Main Content Styling */
+        .content-area {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid var(--bg-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .content-header h1 {
+            font-size: 2rem;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* Hamburger Button specific */
+        .icon-btn {
+            background: #f0f9ff;
+            border: 1px solid var(--bg-light);
+            color: var(--accent-blue);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .icon-btn:hover {
+            background: var(--bg-light);
+        }
+
+        /* Sidebar transition and hidden state */
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            margin-left: -340px; /* 320px width + 20px gap */
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Large Action Buttons */
+        .btn {
+            padding: 14px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-green {
+            background-color: var(--btn-green);
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-green:hover {
+            background-color: var(--btn-green-hover);
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Hover Scale Transition (Applied via class) */
+        .hover-scale {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.03);
+        }
+
+        /* Prompt Text Container */
+        .prompt-body {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #fafaf9;
+        }
+
+        .text-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--bg-light);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            white-space: pre-wrap; /* Preserves formatting and line breaks */
+            color: #334155;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            font-family: inherit;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; /* Updated to flexibly fill remaining height under header */
+            color: #64748b;
+            text-align: center;
+        }
+
+        /* Footer Styling */
+        footer {
+            background: var(--card-bg);
+            padding: 18px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #334155;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 250px;
+                flex-shrink: 0;
+                transition: margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            }
+            .sidebar.hidden {
+                margin-left: 0; /* Override desktop margin */
+                margin-top: -270px; /* 250px height + 20px gap */
+                opacity: 0;
+                pointer-events: none;
+            }
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .content-header h1 {
+                font-size: 1.5rem;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Floating Fullscreen Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .floating-btn:hover {
+            background-color: #0369a1;
+            transform: scale(1.1);
+        }
+
+        /* Fullscreen Distraction-Free Mode */
+        body.fullscreen-mode .content-header,
+        body.fullscreen-mode footer {
+            display: none !important;
+        }
+
+        body.fullscreen-mode .sidebar {
+            margin-left: -340px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            body.fullscreen-mode .sidebar {
+                margin-left: 0;
+                margin-top: -270px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="thin-title">Prompt Collection</h2>
+            </div>
+            <div class="tab-list" id="tab-list">
+                <!-- External Link -->
+                <a href="https://mazen19812002.github.io/H_I_E_T_Interactive_Lecture/#" target="_blank" class="sidebar-link hover-scale" title="Open Interactive Lecture">
+                    <span>HIET Interactive Lecture</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+                <!-- Tabs will be injected here via JS -->
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Persistent Header -->
+            <div class="content-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="icon-btn hover-scale" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <h1 id="active-title" class="thin-title">Prompt Library</h1>
+                </div>
+                <div class="action-buttons">
+                    <button id="copy-btn" class="btn btn-green hover-scale" onclick="copyActivePrompt()" style="display: none;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy Prompt
+                    </button>
+                </div>
+            </div>
+
+            <!-- Default View before selection -->
+            <div id="empty-view" class="empty-state">
+                <h1 class="thin-title" style="font-size: 2.5rem; margin-bottom: 10px;">Welcome</h1>
+                <p style="font-size: 1.2rem;">Select a prompt from the sidebar to view and copy.</p>
+            </div>
+
+            <!-- Active Prompt View -->
+            <div id="active-view" style="display: none; height: 100%; flex-direction: column;">
+                <div class="prompt-body">
+                    <div id="active-content" class="text-box" dir="auto"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Fixed Footer -->
+    <footer>
+        All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing
+    </footer>
+
+    <!-- Floating Distraction-Free Toggle -->
+    <button class="floating-btn" onclick="toggleFullscreenMode()" title="Toggle Distraction-Free Mode">
+        <svg id="fs-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Store all prompts in a structured array. 
+        // Using template literals to preserve exact formatting, spacing, and line breaks.
+        const promptsData = [
+            {
+                id: "prompt1",
+                title: "General Prompt for a Lecture",
+                content: `Create a single-file, offline-capable HTML application serving as a bilingual (English/Arabic) interactive educational resource explicitly designed for university  low-achieving learners.
+The design and functionality must strictly follow the specifications below to present and fully explain the entire attached PDF in extreme detail — no summarization, no omission, no compression.
+All content must be:
+•	Completely covered, including every single page of the PDF.
+•	Broken down into very small, sequential steps
+•	Explained using simple, clear language
+•	Supported with examples, restatements, and visual cues
+•	Repeated where necessary using different explanations to ensure understanding
+•	Any activity must have at least 5 items
+•	Multiple-choice questions must always have exactly 4 options
+The page must be suitable for learners who:
+•	Struggle with comprehension
+•	Need slow pacing
+•	Require explicit guidance and reinforcement
+•	Cannot infer meaning without direct explanation
+________________________________________
+Learning Objectives
+•	Present all learning objectives formulated according to Bloom’s Taxonomy, ranging from Remember, Understand, Apply, Analyze, Evaluate, to Create.
+•	Each objective must include:
+o	A very simple explanation
+o	Expected learner actions
+o	Visual confirmation of mastery (e.g., interactive checklist with strikethrough)
+________________________________________
+Resources & Strategies
+•	Clearly list all materials and resources needed for the lesson.
+•	Provide strategies for instruction; strategies will be per lesson part and predefined, e.g., Lecture, Cooperative Learning, Self-Learning.
+•	Resources and strategies must be explicitly linked to each part of the lesson to support low-achiever learners.
+________________________________________
+Interactive Lesson Flow
+1.	Review
+o	Activities that reinforce prior knowledge and consolidate previously learned material.
+o	Must be interactive, simple, and clearly guided for low-achiever learners.
+o	Each activity must have at least 5 items.
+o	Visual aids, examples, and step-by-step instructions are mandatory.
+2.	Warm-up
+o	Activities designed to prepare learners for the lesson in hand.
+o	Must activate curiosity and engage attention in an easy-to-follow way.
+o	Each activity must have at least 5 items.
+o	Visuals, examples, and simple interactivity must be included.
+3.	Presentation
+o	The lesson is divided into clearly numbered parts.
+o	Each part has its own strategy selection dropdown from the predefined list.
+o	When a strategy is selected:
+	Teacher Role Panel (Amber) explains step-by-step how the teacher presents that part.
+	Student Role Panel (Blue) explains exactly how students interact, using explicit, easy-to-follow actions.
+o	Each part must include:
+	Full detailed explanation of content
+	Visual aids (charts, diagrams, emojis)
+	Key terms explained in simple language
+	Reinforcement examples
+4.	Practice
+o	Includes activities that allow learners to apply what they learned.
+o	Activities must be interactive, scaffolded, and simple, with feedback and guidance.
+o	Each activity must have at least 5 items.
+o	Activities should correspond directly to the parts in the presentation.
+5.	Assignment
+o	Tasks that extend learning outside the app.
+o	Instructions must be clear, step-by-step, and low-pressure.
+o	Each activity must have at least 5 items.
+________________________________________
+Final Evaluation
+•	Questions must be grouped under Learning Objectives.
+•	Each objective must have at least 10 questions.
+•	Questions must be distributed across all levels of Bloom’s Taxonomy (Remember, Understand, Apply, Analyze, Evaluate, Create).
+•	Multiple-choice questions must always have exactly 4 options.
+•	Question types:
+o	Interactive multiple-choice
+o	Immediate feedback:
+	✅ Green + explanation for correct
+	❌ Red + shake animation + simplified correction for incorrect
+•	Language must be encouraging, supportive, and low-stress for learners.
+________________________________________
+Technical Requirements
+•	Single-file HTML: Embed all HTML, CSS, and JavaScript; no external libraries.
+•	Bilingual support:
+o	Header toggle switches all text and layout (LTR/RTL).
+o	Centralized JSON object for all translatable text.
+•	Offline capability: Fully functional without internet.
+•	Responsive design: Mobile, tablet, desktop.
+•	Dynamic strategy panels: Each lesson part updates Teacher/Student panels individually when a strategy is selected.
+•	Interactive elements: Objectives checklist, activities, practice tasks, review activities, evaluation questions.`
+            },
+            {
+                id: "prompt2",
+                title: "Lecture Prompt",
+                content: `Transform the provided PDF contents into a single-file HTML lesson presentation containing three tabbed sections. All resources (images, audio, icons, fonts, JavaScript, and CSS) must be embedded offline within the file. Use traditional, readable fonts and apply a light-blue gradient theme.
+
+Tab 1: Lesson Presentation
+
+Display the lesson text in separate paragraphs.
+
+For each sentence, select at least one keyword and add:
+
+A hover-triggered pop-up showing its Arabic meaning and a representative icon.
+
+Insert a text-to-speech (TTS) button under each passage.
+
+Include an MCQ activity based on the lesson content from the PDF.
+
+Tab 2: Conversation
+
+Place a fixed image placeholder on the right side for file 00.png.
+
+ include a floating audio control that plays the external conversation file 00.mp3.
+If I scroll the question, the image and the MP3 control tool must be fixed within the displayed area.
+the Conversation Tab as requested. The screen width is now distributed so that the MCQ items take up 66.66% (two-thirds) and the Audio Control sidebar takes up 33.33% (one-third)
+Consider that the file will be played on Android, take necessary steps to handle MP3 running on Android without any problem regarding security blocks.
+
+Add an MCQ section with a scrollable container for items.
+
+Provide a collapsible drop-down panel showing the full conversation script, including a play button for revision.
+
+Tab 3: Grammar
+
+Create interactive grammar drills, vocabulary activities, and supplementary materials derived from the PDF.
+
+Support exercises with icons and responsive elements.
+
+Implement drag-and-drop interactions where applicable.
+
+Add a “Show Answer” button for each drill.
+
+General Requirements (Apply Across All Sections)
+
+Under every short-answer and translation question, include a collapsible drop-down to reveal the correct answer.
+
+Add “Show Answer” functionality to all drills and activities. When selected in MCQ, give green for the right answer and red for the wrong one. The MCQ logic:  as soon as you click an option, it will immediately turn Green (if correct) or Red (if incorrect).
+
+optimized the vertical layout to save screen height. The title, tabs, and content sections are more compact, allowing more questions to fit on the screen at once.
+Larger Content Text: Increased reading passages, MCQ questions, and options by approximately 10-15% for better readability.
+Compact Headers: Kept titles and tabs small to maintain the improved screen real estate.
+Ensure the entire design uses a light-blue gradient background theme.`
+            },
+            {
+                id: "prompt3",
+                title: "Lesson Prompt",
+                content: `Transform the provided two PDF files into a single-file HTML lesson presentation containing four compact tabbed sections:
+1.	Board Organization
+2.	Lesson Drills (First PDF — Include ALL Drills Without Skipping Any Item)
+3.	Exercises (Second PDF — Include ALL Exercises Without Skipping Any Item)
+4.	Lesson Planning
+The file must operate fully offline, with all resources embedded directly (images, audio, icons, fonts, JavaScript, CSS, text-to-speech scripts). No CDNs or external links are allowed.
+Use a bright, stylish light-blue gradient background.
+Apply a compact layout with reduced spacing, minimal margins, and tight line spacing.
+Use large, bold, high-contrast traditional fonts (Arial or similar) for maximum readability.
+Follow spacing parameters:
+•	Headings: h = 30 (bold)
+•	Paragraph/body text: p = 20 (Arial, bold)
+•	Compact vertical spacing throughout
+Add a footer header:
+“Developed by Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
+The interface must be:
+•	Fully responsive
+•	Android-compatible
+•	Audio and text-to-speech must function properly offline
+•	Visually polished and neatly structured
+•	High-contrast and easy to read
+Decrease the tab size and place a Zoom Tool (Zoom + / Zoom –) directly beside the tabs to dynamically resize all content.
+Add a “Hide Top Bar” button that:
+•	Hides the entire top navigation area (tabs + zoom controls)
+•	Expands the lesson content to full width
+•	Toggles back when clicked again (Show Top Bar)
+________________________________________
+TAB 1 — Board Organization
+Display content in whiteboard-style layout with compact spacing.
+Include:
+•	Date picker (dd/mm/yyyy format)
+•	Centered lesson title
+•	Line 1: Lesson [Number]
+•	Line 2: [Title]
+•	Warm-up: One WH-question
+•	Vocabulary: Six words arranged in three lines (two English words per line with wide spacing)
+Vocabulary Translation Requirements:
+•	Arabic meanings must NOT appear automatically
+•	Translation must appear beside the English word (not under it)
+•	Translation appears inline, next to the word with clear spacing
+•	Each word is independently clickable
+•	Clicking shows the translation beside it
+•	Clicking again hides the translation
+•	The layout must remain compact and aligned when translation appears
+Include:
+•	Grammar: Two example sentences (one per line)
+•	Evaluation: One paragraph writing prompt
+•	Assignment: One-line task under a heading
+________________________________________
+TAB 2 — Lesson Drills (First PDF)
+⚠️ CRITICAL REQUIREMENT:
+You must include EVERY SINGLE DRILL from the first PDF.
+No drill, instruction, sub-question, example, or activity may be skipped, summarized, merged, or omitted.
+Convert every drill into interactive activities:
+•	MCQs
+•	Matching
+•	Drag-and-drop
+•	Cloze tests
+•	Sentence completion
+•	Rearrangement
+•	Short-answer questions
+•	Writing tasks
+•	Any additional drill types found in the PDF
+Interaction Rules:
+For MCQs / Matching / Cloze:
+•	All answer choices must appear on one line
+•	“Show Answer” button under each activity
+•	When clicked:
+o	Correct answer turns green
+o	Incorrect selections turn red
+o	Correct answer displayed inside the same item
+For short-answer / paragraph tasks:
+•	Provide collapsible “Model Answer” reveal box
+•	Writing tasks must include expandable text areas with sample answers
+Add embedded icons for each activity type.
+Ensure fully responsive behavior and compact structure.
+________________________________________
+TAB 3 — Exercises (Second PDF)
+⚠️ CRITICAL REQUIREMENT:
+You must include EVERY SINGLE EXERCISE from the second PDF.
+No question, example, instruction, or task may be skipped, condensed, or combined.
+Convert all exercises into an interactive format using the same interaction rules as Tab 2.
+Maintain:
+•	One-line answer choices
+•	Show Answer button
+•	Green/red feedback
+•	Collapsible model answers for writing tasks
+•	Drag-and-drop where appropriate
+•	Fully responsive compact layout
+Absolutely no exercise may be omitted.
+________________________________________
+TAB 4 — Lesson Planning
+Create a detailed, ready-to-teach lesson plan, structured clearly and compactly.
+Include:
+Objectives
+•	Displayed as interactive checkboxes
+•	When checked → text becomes strikethrough
+Teaching Strategies
+Required Resources
+Warm-up Plan
+Vocabulary (with examples)
+Language Structure (with examples)
+Controlled Practice
+Free Practice
+Feedback & Consolidation
+Assignment
+The lesson plan must be detailed, practical, and classroom-ready.
+________________________________________
+General Technical Requirements
+•	Fully offline functionality
+•	No external references or CDNs
+•	All assets embedded internally
+•	Compact, bold, high-contrast design
+•	Reduced spacing
+•	Smaller tabs
+•	Zoom tool beside tabs (Zoom + / Zoom –)
+•	Hide/Show Top Bar toggle button
+•	Android-compatible
+•	Audio and text-to-speech must function offline
+•	Clean, structured, readable layout
+•	Bright light-blue gradient theme
+•	Large bold contrastive font throughout
+The final output must be a single fully self-contained HTML file.`
+            },
+            {
+                id: "prompt4",
+                title: "Listening Quiz Prompt",
+                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML listening comprehension test based on the content provided at the end.TECHNICAL REQUIREMENTS (MANDATORY):Zero External Dependencies: Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).Audio: Use a standard HTML5 <audio> tag referencing "00.mp3" locally.Logic: - MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.Single Attempt: Disable all buttons for that specific question after the first click.Zoom Tool: Include buttons to scale the font-size of the main content area (Base: 20px).Tabs: Provide two tabs: "Listening Test" and "Transcript".Hideable Header Interface:Create a Top Bar containing the Tabs and Zoom controls.Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.Create a Floating Audio Bar that sits under the Top Bar at full width. When the header is hidden, this audio bar must remain visible at the very top of the page.DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):Theme: Light blue background (#e0f2fe).Typography: Base font size 20px. Use high-contrast black text on white cards.Layout: Extremely compact with minimal vertical spacing between question cards and narrow line-height (approx 1.3).The correct answers are distributed equally among the four options (A, B, C, and D)
+Question Cards: - Background: White with a distinct border and shadow.Interactivity: "hover-scale" transition (grows slightly on hover).Buttons: - Navigation/Zoom: High-contrast Dark Blue.Correct/Accept: Green (#16a34a).Wrong/Cancel: Red (#dc2626).Titles: Thin, uppercase, spaced-out headers.Footer: Fixed at the bottom with: "All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing".CONTENT TO PROCESS:[PASTE TRANSCRIPT HERE][PASTE MCQ QUESTIONS HERE - Format: Question, 4 Options, Correct Index (0-3)]OUTPUT:Provide only the complete, self-contained, runnable HTML code.`
+            },
+            {
+                id: "prompt5",
+                title: "MCQ Test Prompt",
+                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML Grammar Quiz based on the questions provided at the end.
+
+TECHNICAL REQUIREMENTS (MANDATORY):
+
+Zero External Dependencies:
+Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).
+
+Logic:
+
+MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.
+
+Single Attempt: Disable all buttons for that specific question after the first click.
+
+Zoom Tool:
+Include buttons to scale the font-size of the main content area (Base: 20px).
+
+Tabs:
+Provide one main tab labeled: "Grammar Quiz".
+
+Hideable Header Interface:
+
+Create a Top Bar containing the Tab and Zoom controls.
+
+Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.
+
+DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):
+
+Theme:
+Light blue background (#e0f2fe).
+
+Typography:
+Base font size 20px.
+High-contrast black text on white cards.
+
+Layout:
+
+Extremely compact with minimal vertical spacing between question cards.
+
+Narrow line-height (approximately 1.3).
+
+Answer Distribution:
+The correct answers must be distributed equally among the four options (A, B, C, and D).
+
+Question Cards:
+
+Background: White
+
+Distinct border and shadow
+
+"Hover-scale" transition (slight growth on hover)
+
+Buttons:
+
+Navigation / Zoom: High-contrast Dark Blue
+
+Correct Answer: Green (#16a34a)
+
+Wrong Selection: Red (#dc2626)
+
+Titles:
+
+Thin, uppercase, spaced-out headers.
+
+Footer:
+
+Fixed at the bottom with the text:
+"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"
+
+CONTENT TO PROCESS:
+
+[PASTE GRAMMAR MCQ QUESTIONS HERE – Format:
+Question,
+4 Options,
+Correct Index (0–3)]
+
+OUTPUT REQUIREMENT:
+
+Provide only the complete, self-contained, runnable HTML code.`
+            },
+            {
+                id: "prompt6",
+                title: "MCQ Test Prompt 2 (With List)",
+                content: `Act as a senior Front-End Engineer and UX Architect. Your task is to generate a fully functional, production-level, single-file, 100% offline HTML Listening and Reading Comprehension Test Application. The final output must consist of one complete and self-contained \`index.html\` file that includes all HTML, CSS, and JavaScript. The application must run entirely offline without any external dependencies, frameworks, CDNs, libraries, Google Fonts, or internet calls. All styling must be written inside a \`<style>\` block using only system fonts such as Segoe UI and Arial. All logic must be written inside a single \`<script>\` tag, structured with clean modular functions and without global variable pollution or inline JavaScript attributes.
+
+The application must implement a strict question engine. Each question allows only one attempt. As soon as a user selects an answer, all options for that question must immediately become disabled. If the selected answer is incorrect, the chosen option must turn red and the correct answer must turn green. If the selected answer is correct, it must turn green. A feedback message must dynamically appear directly below the question after submission. Correct answers display green feedback text, while incorrect responses display red feedback text explaining the correct answer. The system must mathematically distribute correct answers equally among A, B, C, and D, regardless of the provided content. Each time a tab is clicked, both the order of questions and the position of answer options must be reshuffled while maintaining equal correct-answer distribution.
+
+The interface must include a fixed top navigation bar containing auto-generated category tabs, zoom controls labeled A- and A+, a CSV export button, and an Auto-Save toggle button. The base font size must be 20px and adjustable between 16px and 30px using smooth scaling animation. The layout must be fully responsive using CSS Grid and Flexbox. Question cards must have a white background, solid border, subtle shadow, hover-scale animation, and a grid layout ensuring that all four answer buttons are exactly equal in size.
+
+The system must automatically generate an additional tab named “Mixed Practice.” This tab must pull exactly five random questions from each available category without duplication. It must include a large green button labeled “Generate New Random Set,” which reshuffles the selection each time it is clicked while maintaining full functionality and distribution logic.
+
+When a student selects any answer, an un-dismissible modal window must appear requiring entry of a Student Number before proceeding. As the number is typed, the system must cross-reference a provided JSON database and dynamically display the corresponding Student Name. If the number is not found, a clear red warning must appear. The application must record data only if the student exists and the answer is correct. Incorrect answers must never be stored for export.
+
+The application must include a CSV export feature accessible from the top bar. The exported file must be UTF-8 with BOM encoding to ensure native compatibility with Excel. It must include the following columns: Date, Student Number, Student Name, Category, Question, Selected Answer, Correct Answer, and Status. Additionally, an Auto-Save feature using the File System Access API must be implemented. When the user clicks “Enable Auto-Save,” the browser must prompt them to select or create a local CSV file. Once linked, every correct answer must be appended automatically and silently to the selected file. The Auto-Save toggle must display red when disabled and green when enabled. If the browser does not support this API, a graceful warning must be displayed.
+
+The design must follow a bright, high-contrast, modern style using a light blue background (#e0f2fe). Headers must be uppercase, letter-spaced, thin-weighted, and highly readable. Buttons for correct, save, and generate actions must use green (#16a34a). Buttons for wrong, cancel, disable, or auto-save off must use red (#dc2626). Navigation elements must use dark blue (#1e3a8a). All interactive elements must include smooth hover-scale animations and color transitions. A fixed footer must appear at the bottom containing the exact text: “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
+
+A circular floating button containing the symbol ⛶ must appear in the bottom-right corner. When clicked, it must smoothly hide or show both the top navigation bar and the footer to create a distraction-free mode. If the test includes an audio component, a floating audio bar must appear directly under the top bar, spanning full width, using a standard HTML5 audio element referencing a local file. If distraction-free mode is activated, the audio bar must remain visible and snap to the top of the page. If no listening component is required, the audio bar must not be rendered.
+
+The input section must allow insertion of a JSON student database containing student numbers and names, followed by categorized test material separated by clear category headers. All questions must test the application of rules or concepts rather than definitions. Each question must include exactly four options. The final response must contain only the complete, runnable HTML code with no explanations, markdown, or additional commentary outside the file.`
+            },
+            {
+                id: "prompt7",
+                title: "Interactive Lecture Generator (Strategy-Driven)",
+                content: `*Prompt: Single-File HTML Instruction-Guided Interactive Lecture Generator (Strategy-Driven Sections)**
+
+Design a **single-file HTML interactive lecture application** that transforms an **educational unit PDF** into a **fully structured, instruction-guided digital lecture**, where **each lecture section dynamically adapts** according to a **selected learning or teaching strategy**.
+
+---
+
+### 🎯 **Core Purpose**
+
+Convert a unit PDF into an interactive lecture in which:
+
+* Learning strategies are **not only selected globally**
+* But can also be **applied individually to each lecture section**
+* The screen **actively guides teachers and learners** in implementing the chosen strategy step by step
+
+---
+
+### 🧠 **Instructional Guidance Requirement (CRITICAL)**
+
+For **every lecture section**, once a strategy is selected:
+
+* The interface must display **clear, step-by-step implementation guidance**
+* Guidance must specify:
+
+  * Teacher actions
+  * Student actions
+  * Timing and pacing
+  * Grouping format (individual / pairs / groups)
+* Use **clearly labeled instruction panels**, such as:
+
+  * *Teacher Instruction*
+  * *Student Task*
+  * *Classroom Tip*
+* The screen must function as a **live teaching script** for real-time classroom delivery
+
+---
+
+### 🧱 **Layout & Structure Requirements**
+
+* **Single HTML file**
+
+  * Fully offline
+  * All CSS and JavaScript embedded
+* **Compact layout** allowing many lines on one screen
+* **Large, projector-friendly fonts**
+* Use **\`rem\` units exclusively** for all sizing and layout
+
+---
+
+### 🧭 **Navigation & Interface**
+
+#### 🔸 Left Sidebar (Hideable)
+
+* Strategy tabs at the top (optional global view)
+* Quick navigation between lecture sections
+
+#### 🔸 Main Content Area (Section-Controlled)
+
+Each lecture section must include a **strategy dropdown menu positioned beside the section title**, allowing the teacher to select a strategy **independently for that section**.
+
+**Lecture sections include (minimum):**
+
+* Objectives
+* Review / Activation
+* Presentation
+* Guided Practice
+* Activities
+* Evaluation
+* Reflection / Consolidation
+
+**When a strategy is selected from a section dropdown:**
+
+* The **content, activities, and instructions of that section** update immediately
+* The instructional guidance appears **inside the same section**
+* The rest of the lecture remains unchanged
+
+---
+
+### 🎛️ **Section Strategy Dropdown Behavior**
+
+* Each section has its **own strategy selector**
+* Default option: *No Strategy / Direct Instruction*
+* Changing the strategy:
+
+  * Reorganizes the section layout
+  * Updates instructional prompts
+  * Adjusts activity and assessment format
+* No page reloads
+
+---
+
+### 🎨 **Design & Colors**
+
+* Background: **Gradient (White → Sky-Blue)**
+* Buttons:
+
+  * **Blue** → Positive actions (Start / Apply / Submit)
+  * **Red** → Negative actions (Reset / Clear / Incorrect)
+  * **Green** → Neutral actions (Show Answer / Hint / Model)
+
+---
+
+### 🔍 **Zoom & Visibility Controls**
+
+* **Zoom In (+) / Zoom Out (–)**
+
+  * Adjust the \`html\` root font size
+  * Scale **all UI elements and content together**
+* **Header Toggle**
+
+  * Collapse header to maximize reading space
+  * Floating restore button
+
+---
+
+### 📱 **Responsiveness**
+
+* Fully responsive and mobile-friendly
+* No horizontal scrolling
+* Smooth scaling for projector and mobile mirroring
+
+---
+
+### 🧠 **Interactive Assessment Features**
+
+#### ✅ MCQ / True–False
+
+* Immediate visual feedback:
+
+  * Green for correct
+  * Red + shake animation for incorrect
+
+#### ✍️ Short Answer
+
+* Input field
+* **“Show Answer”** collapsible reveal
+
+#### 📝 Writing Tasks
+
+* Writing area
+* **“Show Model Answer”** with sample response or rubric
+
+---
+
+### ⚙️ **Functional Expectations**
+
+* Strategy selection works **per section**, not only globally
+* Instructional guidance updates dynamically
+* Visual cues support lesson pacing and flow
+* Designed for **live classroom teaching**
+
+---
+
+### 📌 **Final Output**
+
+Produce **one complete HTML file** that:
+
+* Operates fully offline
+* Acts as a **lecture, activity, assessment, and teaching guide**
+* Enables flexible, strategy-driven instruction **section by section**`
+            },
+            {
+                id: "prompt8",
+                title: "Interactive Lecture Application",
+                content: `Act as a senior educational software engineer and front-end architect. Transform the instructional content provided at the end into a single-file, high-density, fully responsive interactive lecture web application that is production-ready, visually polished, pedagogically structured, and entirely self-contained. The application must apply a light blue gradient background transitioning from #f0f9ff to #bae6fd, with all content displayed inside white card containers for maximum readability. All body text must be bold, large, and high-contrast using pure black on white cards, while section titles must use very thin font weights to maximize usable content space. Every section card and interactive component must implement a smooth hover-scale effect using transform: scale(1.02). Buttons must follow a strict color system: Execute/Accept/Confirm in green (#22c55e), Cancel/Delete/Stop in red (#ef4444), and Standard/Selection/Navigation in blue (#007bff). A fixed footer must appear displaying the text “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing”. The header must be sticky with a maximum height of 70px and contain branding on the left, ScrollSpy navigation in the center, and circular zoom controls (+ and –) on the right that dynamically adjust the root HTML font size to scale the entire interface uniformly. The application must not include any bilingual language toggle or language-switching functionality, and all content must be presented in a single predefined language. Each lesson section must include a “Strategy” dropdown selector that dynamically updates a Teacher Instruction panel (amber background) and a Student Task panel (blue background) with step-by-step procedures using structured data. Text-to-Speech functionality must be integrated using the Gemini API endpoint, and every reading passage must include an independent 🔊 button that triggers natural voice narration. ScrollSpy navigation buttons must automatically highlight based on scroll position and enable smooth scrolling. The lesson structure must include Objectives presented as bullet points, a Warm-Up section with brainstorming or guided discussion questions, a Presentation section divided into passages that strictly preserve the original line endings of the provided text and include independent TTS buttons, and an Assessment section containing open-ended questions with “Show Model Answer” toggles, multiple-choice questions in a grid layout with immediate feedback (green for correct answers and red with shake animation for incorrect ones), and translation activities with textareas and model answer reveal buttons. The implementation must be delivered as a single HTML file with embedded CSS and vanilla JavaScript only, without external libraries, CDNs, or frameworks, and must function fully offline except for the Gemini TTS API call. All textual content must be stored inside a structured JavaScript object named contentData, and all UI rendering must dynamically reference this object. The application must be fully responsive and optimized for classroom projectors, tablets, and mobile devices while maintaining a high-density layout that maximizes visible content without clutter. Insert the new lesson content or extracted PDF text at the designated input location at the end of the file.`
+            },
+            {
+                id: "prompt9",
+                title: "Revision Test Application",
+                content: `Transform the attached PDF into a **single-file HTML interactive application**. The file must operate fully offline with **no external dependencies** (embed all CSS and JavaScript internally).
+
+### **1. Design & Layout Requirements**
+
+* **Theme:** Bright, clean, and stylish with a **light-blue gradient background** (e.g., \`#e1f5fe\` to \`#b3e5fc\`).
+* **Typography:** Modern, readable Arabic fonts (e.g., Segoe UI/Tahoma). **Titles must be thin** (\`font-weight: 300\`) and elegant.
+* **Responsiveness:** Fully responsive and mobile-friendly. Use **\`rem\` units** for all sizing (padding, margins, fonts) to allow global scaling.
+* **Header:** A sticky top bar containing:
+* Navigation tabs (Exams 1–5 + Comprehensive Test).
+* **Zoom Controls:** (+) and (-) buttons that scale the **entire interface** (fonts, layout, images) by adjusting the root font size.
+* **Toggle Visibility:** A button to **collapse/hide the header** to maximize reading space, with a floating button to bring it back.
+
+
+* **Footer:** A fixed footer reading: *"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"*.
+* **Animations:** Add a **hover scale transition** where interactive elements (cards, buttons, inputs) grow slightly when the mouse hovers over them.
+* **Visual Feedback:**
+* **Green:** Correct answers / Accept / Execute.
+* **Red:** Incorrect answers / Cancel / Stop / Shake animation on error.
+
+
+
+### **2. Content & Structure**
+
+Implement **5 distinct Exam tabs**, where each exam follows this structure (based on the provided text):
+
+1. **Listening/Reading Passages:** Display the full text of the passage (Listening script, Reading text, Poem, or Grammar context) inside a distinct, styled box **before** the questions.
+2. **Question Types:**
+* **True/False:** Radio buttons.
+* **MCQ (Choose):** Radio buttons.
+* **Short Answer / Extraction:** Text input fields.
+* **Creative Writing / Expression:** Text area fields.
+* **Spelling/Correction:** Text input fields.
+
+
+
+### **3. Functional Logic**
+
+* **Interactive grading:**
+* **MCQ/True-False:** Provide **immediate visual feedback** upon selection (turn the label Green if correct, Red with a shake animation if incorrect).
+* **Text Inputs (Short Answer):** Include a **"Show Answer" button** underneath that reveals the correct answer via a collapsible toggle.
+* **Writing Tasks:** Include a **"Show Model Answer" button** that reveals a sample response/rubric.
+
+
+* **Global Grading:** A "Finish & Check" button at the bottom of each tab that calculates the score based on inputs.
+* **Final Test Tab:**
+* This tab must **randomly select** a mix of questions from all previous exams.
+* Include a **"Reset" button** to generate a new random combination.
+
+
+* **Zoom Functionality:** The zoom buttons must adjust the \`html\` root font size so that the zoom effect applies to **passages, questions, and UI elements** simultaneously.
+
+### **4. Input Data**`
+            },
+            {
+                id: "prompt10",
+                title: "Revision Units Prompt",
+                content: `Transform the attached content/PDF into a single-file, HTML-based interactive revision application.
+The output must be one standalone HTML file, fully offline, with all CSS and JavaScript embedded.
+Do not use external libraries, CDNs, online assets, or external links.
+________________________________________
+Design & Layout
+•	Theme: Bright, clean, light-blue gradient background
+•	Typography: Traditional, readable fonts; thin/light titles
+•	Responsiveness: Fully responsive; large touch targets
+•	Header (sticky): Navigation tabs, Zoom (+/−), Difficulty Selector (Beginner | Intermediate | Advanced)
+•	Footer (fixed):
+“All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.”
+________________________________________
+Color Coding
+•	Green: Correct / Accept / Execute
+•	Red: Incorrect / Cancel / Stop
+________________________________________
+Difficulty System (Global)
+Three levels applied to all content:
+•	Beginner: Basic facts and direct meaning
+•	Intermediate: Understanding, function, relationships
+•	Advanced: Application, reasoning, justification
+The selected difficulty filters visible content, listening passages, and test generation.
+Default level: Beginner.
+________________________________________
+Application Structure (Create tabs for each of the question types that exist in the PDF The final exam must follow the same question type and number of questions in the uploaded PDF- ONLY the concepts tab is fixed)
+1. Concepts
+Visual study guide in cards using icons/emojis; progressive depth by difficulty.
+Use infographics when possible
+2. MCQ
+20–30 questions; instant feedback; explanation box; +1 per correct answer.
+3. True / False
+20–30 items; instant feedback; explanation; +1 per correct answer.
+4. Matching
+•	Matching activities must be displayed in two clear vertical columns:
+o	Left column: terms/prompts
+o	Right column: definitions/responses
+•	Learners select one item from each column to form a pair.
+•	Correct matches:
+o	Turn green
+o	Lock in place
+o	Incorrect matches:
+o	Turn red
+o	Display an error message
+o	Allow retry
+•	5–7 matching groups, difficulty-tagged, with partial scoring where appropriate.
+5. Cloze / Fill in the Blanks
+20–30 sentences with embedded dropdowns; validation button; explanation box; +1 per correct sentence.
+6. Short Answer
+15–25 questions focusing on definitions, concepts, functions, and purposes.
+Answers are hidden by default and revealed via collapsible “Show Answer / إظهار الإجابة” boxes.
+Answer text appears in green.
+7. Listening
+Listening tasks derived from the reading material using offline text-to-speech.
+•	3–6 listening passages per difficulty level
+•	Audio controls: Play, Pause, Stop, Speed (0.75×–1.5×)
+•	Voice/Accent selector (English and Arabic voices where available)
+•	Repeat-sentence / Shadowing mode for pronunciation and fluency practice
+Listening Script Visibility
+•	The full listening script must be hidden by default
+•	Script is revealed only through a collapsible text area labeled:
+Show Script / إظهار النص
+•	When revealed, the script appears in a styled box consistent with the theme
+Listening Comprehension
+•	3–5 questions per passage (MCQ or True/False)
+•	Immediate feedback and explanation
+•	+1 per correct answer
+8. Translation (الترجمة)
+Short passages for Arabic ↔ English translation.
+•	Direction clearly stated (EN→AR / AR→EN)
+•	Passages graded by difficulty
+•	Model translation hidden by default
+•	Answers revealed using collapsible boxes labeled:
+Show Translation / إظهار الترجمة
+•	Translation text appears in green
+9. Test
+Randomized assessment generated from the same central database:
+•	5 MCQs
+•	5 True/False
+•	5 Cloze
+•	1 Matching group
+•	Listening items may appear at advanced level
+Each test regenerates with different questions.
+________________________________________
+Listening-Specific Requirements
+•	Fully offline text-to-speech (browser-based)
+•	Accent/voice selection saved locally
+•	Shadowing mode with sentence-by-sentence playback and pauses
+•	Script hidden in collapsible section (default state)
+________________________________________
+Scoring & Progress Tracking
+•	Live score display (attempts, correct, percentage)
+•	Performance colors:
+o	≥80% Green | 50–79% Orange | <50% Red
+•	Offline progress tracking using local storage
+•	Visual progress dashboard
+•	Reset Progress button
+________________________________________
+Teacher Mode (Offline)
+PIN-protected toggle enabling:
+•	Reveal all answers and scripts
+•	Show explanations by default
+•	Disable scoring (practice-only mode)
+•	Reset learner data
+________________________________________
+Technical Requirements
+•	All content stored in one central JavaScript database
+•	Full support for Arabic (RTL) and English (LTR)
+•	Robust, stable, and bug-free
+•	Entire application contained in a single HTML file
+________________________________________
+Restrictions
+❌ No external libraries
+❌ No CDNs
+❌ No online assets or links
+________________________________________`
+            },
+            {
+                id: "prompt11",
+                title: "Interactive Lecture (Harmonized)",
+                content: `Below is a **harmonized version where the two prompts function as complementary layers** instead of overlapping or contradicting each other.
+
+* **Prompt A becomes the pedagogical specification** (what the lesson must contain).
+* **Prompt B becomes the engineering specification** (how the application must be built).
+
+Together they guide the system to generate the **same application from two synchronized perspectives**: instructional design + front-end architecture.
+
+---
+
+# Prompt A — Pedagogical Specification (Instructional Design Layer)
+
+Create a **single-file, fully offline HTML educational application** designed as a **bilingual (English/Arabic) interactive learning environment** specifically for **university low-achieving learners**.
+
+The system must **present and explain the entire attached PDF in extreme instructional detail**.
+
+Strict instructional rules:
+
+• Every page of the PDF must be included.
+• No summarization, skipping, or compression is allowed.
+• Content must be broken into **very small sequential instructional steps**.
+• Language must be **simple, explicit, and supportive**.
+• Concepts must be reinforced through **examples, restatements, guided explanations, and visual cues**.
+• Difficult ideas must be **re-explained using alternative wording** where necessary.
+
+Activity rules:
+
+• Any activity must contain **at least 5 items**.
+• Any **multiple-choice question must have exactly 4 options**.
+
+The learning experience must support students who:
+
+• struggle with comprehension
+• need slow pacing
+• require explicit guidance and scaffolding
+• cannot infer meaning without direct explanation
+
+---
+
+## Learning Objectives
+
+All objectives must follow **Bloom’s Taxonomy hierarchy**:
+
+Remember → Understand → Apply → Analyze → Evaluate → Create.
+
+Each objective must include:
+
+• A simplified explanation of the objective
+• Explicit learner actions describing what students must do
+• A **visual mastery indicator** (interactive checklist with strikethrough when completed)
+
+---
+
+## Resources and Strategies
+
+List all required materials and learning resources clearly.
+
+Each lesson part must include **a selectable teaching strategy** from this predefined list:
+
+Interactive Lecture
+Guided Field Trips
+E-Learning
+Discussion and Dialogue
+Research and Reporting
+Problem-Based Learning
+Experiential Learning
+Brainstorming
+Group Projects
+Presentations
+
+Strategies must be **explicitly connected to each lesson part** so that learners clearly understand how learning is organized.
+
+---
+
+## Interactive Lesson Flow
+
+### 1. Review
+
+Purpose: Reinforce prior knowledge.
+
+Requirements:
+
+• Fully interactive activities
+• Simple step-by-step instructions
+• Minimum **5 items per activity**
+• Visual cues and examples
+
+---
+
+### 2. Warm-Up
+
+Purpose: Prepare learners for the new topic.
+
+Requirements:
+
+• Curiosity-triggering activities
+• Clear, simple instructions
+• Minimum **5 items per activity**
+
+---
+
+### 3. Presentation
+
+The lesson must be divided into **clearly numbered instructional parts**.
+
+Each part must include:
+
+• Detailed explanation of the topic
+• Key terms explained in simple language
+• Visual aids (charts, diagrams, emojis)
+• Reinforcement examples
+
+Each part must also contain a **Strategy Selection dropdown**.
+
+Selecting a strategy must dynamically display:
+
+**Teacher Role Panel (Amber)**
+Step-by-step instructions for the instructor.
+
+**Student Role Panel (Blue)**
+Clear actions describing how students participate.
+
+---
+
+### 4. Practice
+
+Practice activities must allow learners to apply knowledge.
+
+Requirements:
+
+• Interactive scaffolded exercises
+• Immediate guidance and feedback
+• Minimum **5 items per activity**
+• Direct alignment with presentation parts
+
+---
+
+### 5. Assignment
+
+Assignments extend learning outside the application.
+
+Requirements:
+
+• Step-by-step instructions
+• Low-pressure learning tasks
+• Minimum **5 items**
+
+---
+
+## Final Evaluation
+
+Assessment must be organized **by learning objectives**.
+
+Each objective must contain **at least 10 questions**.
+
+Questions must cover **all Bloom’s levels**.
+
+Allowed question types:
+
+• Interactive multiple-choice (exactly 4 options)
+• Immediate feedback system:
+
+Correct answer
+→ Green confirmation + explanation
+
+Incorrect answer
+→ Red indicator + shake animation + simplified correction
+
+Language must always remain **encouraging and supportive**.
+
+---
+
+# Prompt B — Software Architecture Specification (Engineering Layer)
+
+Act as a **senior educational software engineer and front-end architect**.
+
+Implement the pedagogical design above as a **production-ready interactive lecture application**.
+
+The application must be delivered as a **single standalone HTML file** containing:
+
+HTML + Vanilla CSS + Vanilla JavaScript only.
+No external libraries or CDNs.
+
+---
+
+## Design System
+
+Background
+Fixed gradient:
+
+#f0f9ff → #bae6fd
+
+Containers
+White cards with:
+
+• 12px rounded corners
+• soft shadows
+• hover animation
+
+\`\`\`
+transform: scale(1.02)
+\`\`\`
+
+Typography
+
+Body text
+• large (1.1rem)
+• bold
+• pure black
+
+Headings (h1–h3)
+
+• very thin
+• font-weight 200
+
+Use system fonts only.
+
+---
+
+## Button Color Code
+
+Green (#22c55e)
+Accept / Execute / Correct / Show Answer
+
+Red (#ef4444)
+Cancel / Stop / Hide Answer / Incorrect
+
+Blue (#007bff)
+Navigation / Selection / TTS
+
+---
+
+## Accessibility
+
+Implement **dynamic zoom controls** that adjust root \`rem\` size through JavaScript.
+
+---
+
+## Layout Structure
+
+### Header (Sticky)
+
+Maximum height: 70px.
+
+Contents:
+
+Left
+Dr. Mazen Badawy (thin font)
+
+Center
+Tab Navigation
+
+Right
+Zoom controls (+ / −)
+
+Blurred translucent background.
+
+---
+
+### Footer (Fixed)
+
+Blurred translucent background.
+
+Must display exactly:
+
+All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing
+
+---
+
+### Floating UI Toggle
+
+Bottom-right circular button (👁️).
+
+When pressed:
+
+• header slides upward
+• footer slides downward
+
+This creates a **full-screen reading mode**.
+
+---
+
+## Tab Interface
+
+Only one tab visible at a time.
+
+The tab system must organize the pedagogical content into the following sections:
+
+Objectives
+Review
+Warm-Up
+Presentation
+Practice
+Assignment
+Evaluation
+
+---
+
+## Data Architecture
+
+All textual content must be stored inside a **centralized JavaScript object**:
+
+\`\`\`
+const contentData = {}
+\`\`\`
+
+This object must contain:
+
+• bilingual text
+• passages
+• vocabulary
+• questions
+• objectives
+• activities
+• strategy mappings
+
+All UI components must be **rendered dynamically from this object**.
+
+---
+
+## Strategy System
+
+Presentation sections must include a **Strategy Selection dropdown**.
+
+Selecting a strategy dynamically updates two panels:
+
+Amber Panel
+Teacher Instructions
+
+Blue Panel
+Student Tasks
+
+Strategies must match the predefined pedagogical list.
+
+---
+
+## Interactive Reading Features
+
+Implement **native browser Text-to-Speech** using:
+
+\`\`\`
+window.speechSynthesis
+\`\`\`
+
+Each passage must include:
+
+• a large circular TTS button
+• stop button toggle
+
+---
+
+## Vocabulary Tooltips
+
+Vocabulary words must:
+
+• appear highlighted in blue
+• be underlined with dashed styling
+
+Hovering shows a tooltip containing:
+
+• English meaning
+• mini TTS pronunciation button
+
+Minimum **6 vocabulary items per passage**.
+
+---
+
+## Assessment Mechanics
+
+### Multiple Choice
+
+• exactly 4 options
+• immediate feedback
+
+Correct answer
+
+• green highlight
+• explanation
+
+Incorrect answer
+
+• red highlight
+• shake animation
+• corrective explanation
+
+---
+
+### Open Questions / Translation
+
+Include a **Show Model Answer button**.
+
+Click behavior:
+
+Show answer
+→ green bordered panel
+
+Button switches to:
+
+Hide Model Answer
+(red button)
+
+---
+
+## Technical Constraints
+
+• Fully offline functionality
+• Fully responsive (mobile / tablet / desktop)
+• No external assets
+• All logic contained in one HTML file
+
+---
+
+**Result:**
+These two prompts now **work together instead of competing**.
+
+Prompt A defines **pedagogy and instructional requirements**.
+Prompt B defines **UI architecture and software behavior**.
+
+Used together, they reliably produce a **complete bilingual interactive teaching application from a PDF**.
+
+---
+
+If you want, I can also show you a **third “master prompt” that merges both into one ultra-stable prompt** (this improves AI output reliability significantly).`
+            }
+        ];
+
+        let currentActiveId = null;
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabListContainer = document.getElementById('tab-list');
+            
+            // Build Sidebar
+            promptsData.forEach((prompt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn hover-scale';
+                btn.id = `btn-${prompt.id}`;
+                // Add a folder-like icon for aesthetics
+                btn.innerHTML = `
+                    <span>${prompt.title}</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                `;
+                btn.onclick = () => selectPrompt(prompt.id);
+                tabListContainer.appendChild(btn);
+            });
+        });
+
+        // Handle Selection
+        function selectPrompt(id) {
+            // Find Data
+            const promptData = promptsData.find(p => p.id === id);
+            if(!promptData) return;
+
+            // Reset Active Class
+            if (currentActiveId) {
+                const prevBtn = document.getElementById(`btn-${currentActiveId}`);
+                if (prevBtn) prevBtn.classList.remove('active');
+            }
+
+            // Set New Active Class
+            const currentBtn = document.getElementById(`btn-${id}`);
+            if (currentBtn) currentBtn.classList.add('active');
+            currentActiveId = id;
+
+            // Update DOM Elements
+            document.getElementById('empty-view').style.display = 'none';
+            document.getElementById('active-view').style.display = 'flex';
+            
+            document.getElementById('active-title').textContent = promptData.title;
+            document.getElementById('active-content').textContent = promptData.content;
+            document.getElementById('copy-btn').style.display = 'inline-flex'; // Show button when a prompt is selected
+            
+            // Scroll to top of content
+            document.querySelector('.prompt-body').scrollTop = 0;
+            
+            // Reset Copy Button State
+            resetCopyButton();
+        }
+
+        // Copy functionality with Clipboard API & Fallback
+        function copyActivePrompt() {
+            if (!currentActiveId) return;
+            const promptData = promptsData.find(p => p.id === currentActiveId);
+            if (!promptData) return;
+
+            const copyBtn = document.getElementById('copy-btn');
+            
+            const handleSuccess = () => {
+                copyBtn.innerHTML = `
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                    Copied Successfully!
+                `;
+                copyBtn.style.backgroundColor = 'var(--btn-green-hover)';
+                setTimeout(resetCopyButton, 2500);
+            };
+
+            const handleFailure = () => {
+                // Fallback for iFrames / stricter environments
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = promptData.content;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    handleSuccess();
+                } catch (err) {
+                    copyBtn.textContent = 'Failed to copy';
+                    copyBtn.style.backgroundColor = '#ef4444'; // Red error
+                    setTimeout(resetCopyButton, 2500);
+                }
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(promptData.content)
+                    .then(handleSuccess)
+                    .catch(handleFailure);
+            } else {
+                handleFailure();
+            }
+        }
+
+        function resetCopyButton() {
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.innerHTML = `
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy Prompt
+            `;
+            copyBtn.style.backgroundColor = 'var(--btn-green)';
+        }
+
+        // Toggle Sidebar Function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Toggle Fullscreen / Distraction-Free Mode
+        function toggleFullscreenMode() {
+            document.body.classList.toggle('fullscreen-mode');
+            const icon = document.getElementById('fs-icon');
+            
+            if (document.body.classList.contains('fullscreen-mode')) {
+                // Change to collapse icon
+                icon.innerHTML = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>';
+            } else {
+                // Change to expand icon
+                icon.innerHTML = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>';
+            }
+        }
+    </script>
+</body>
+</html>
