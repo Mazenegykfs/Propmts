@@ -59,6 +59,13 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .sidebar.hidden {
+            margin-left: -340px; /* 320px width + 20px gap */
+            opacity: 0;
+            pointer-events: none;
         }
 
         .sidebar-header {
@@ -173,25 +180,6 @@
             background: var(--bg-light);
         }
 
-        /* Sidebar transition and hidden state */
-        .sidebar {
-            width: 320px;
-            flex-shrink: 0;
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        }
-
-        .sidebar.hidden {
-            margin-left: -340px; /* 320px width + 20px gap */
-            opacity: 0;
-            pointer-events: none;
-        }
-
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -258,7 +246,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex: 1; /* Updated to flexibly fill remaining height under header */
+            flex: 1;
             color: #64748b;
             text-align: center;
         }
@@ -302,8 +290,8 @@
                 transition: margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
             }
             .sidebar.hidden {
-                margin-left: 0; /* Override desktop margin */
-                margin-top: -270px; /* 250px height + 20px gap */
+                margin-left: 0;
+                margin-top: -270px;
                 opacity: 0;
                 pointer-events: none;
             }
@@ -431,7 +419,7 @@
 
     <script>
         // Store all prompts in a structured array. 
-        // Using template literals to preserve exact formatting, spacing, and line breaks.
+        // Order as requested:
         const promptsData = [
             {
                 id: "prompt1",
@@ -517,189 +505,6 @@ o	Centralized JSON object for all translatable text.
 •	Responsive design: Mobile, tablet, desktop.
 •	Dynamic strategy panels: Each lesson part updates Teacher/Student panels individually when a strategy is selected.
 •	Interactive elements: Objectives checklist, activities, practice tasks, review activities, evaluation questions.`
-            },
-            {
-                id: "prompt2",
-                title: "Lecture Prompt",
-                content: `Transform the provided PDF contents into a single-file HTML lesson presentation containing three tabbed sections. All resources (images, audio, icons, fonts, JavaScript, and CSS) must be embedded offline within the file. Use traditional, readable fonts and apply a light-blue gradient theme.
-
-Tab 1: Lesson Presentation
-
-Display the lesson text in separate paragraphs.
-
-For each sentence, select at least one keyword and add:
-
-A hover-triggered pop-up showing its Arabic meaning and a representative icon.
-
-Insert a text-to-speech (TTS) button under each passage.
-
-Include an MCQ activity based on the lesson content from the PDF.
-
-Tab 2: Conversation
-
-Place a fixed image placeholder on the right side for file 00.png.
-
- include a floating audio control that plays the external conversation file 00.mp3.
-If I scroll the question, the image and the MP3 control tool must be fixed within the displayed area.
-the Conversation Tab as requested. The screen width is now distributed so that the MCQ items take up 66.66% (two-thirds) and the Audio Control sidebar takes up 33.33% (one-third)
-Consider that the file will be played on Android, take necessary steps to handle MP3 running on Android without any problem regarding security blocks.
-
-Add an MCQ section with a scrollable container for items.
-
-Provide a collapsible drop-down panel showing the full conversation script, including a play button for revision.
-
-Tab 3: Grammar
-
-Create interactive grammar drills, vocabulary activities, and supplementary materials derived from the PDF.
-
-Support exercises with icons and responsive elements.
-
-Implement drag-and-drop interactions where applicable.
-
-Add a “Show Answer” button for each drill.
-
-General Requirements (Apply Across All Sections)
-
-Under every short-answer and translation question, include a collapsible drop-down to reveal the correct answer.
-
-Add “Show Answer” functionality to all drills and activities. When selected in MCQ, give green for the right answer and red for the wrong one. The MCQ logic:  as soon as you click an option, it will immediately turn Green (if correct) or Red (if incorrect).
-
-optimized the vertical layout to save screen height. The title, tabs, and content sections are more compact, allowing more questions to fit on the screen at once.
-Larger Content Text: Increased reading passages, MCQ questions, and options by approximately 10-15% for better readability.
-Compact Headers: Kept titles and tabs small to maintain the improved screen real estate.
-Ensure the entire design uses a light-blue gradient background theme.`
-            },
-            {
-                id: "prompt3",
-                title: "Lesson Prompt",
-                content: `Transform the provided two PDF files into a single-file HTML lesson presentation containing four compact tabbed sections:
-Transform the two provided PDF files into a single-file HTML interactive lesson presentation organized into four compact tabbed sections: Board Organization, Lesson Drills (First PDF — Student Book), Exercises (Second PDF — Workbook), and Lesson Planning. The system must extract all instructional content from both PDFs and convert it into an interactive educational application designed for classroom teaching and student practice. The generated file must preserve every instruction, question, example, and activity appearing in the PDFs while converting them into a structured, interactive interface suitable for teaching and self-study.
-The application must operate entirely offline as a single HTML file. All JavaScript, CSS, fonts, icons, images, audio resources, and scripts must be fully embedded within the file itself. External CDNs, external links, and remote dependencies are strictly forbidden. The application must function correctly on desktop browsers and Android devices with all features operational without internet access, including audio playback and offline text-to-speech using the browser’s built-in speech synthesis engine.
-The user interface must use a bright, stylish light-blue gradient background (for example from #f0f9ff to #bae6fd) and maintain a high-contrast, visually polished teaching interface. The color system must follow strict rules: blue shades for primary actions, correct answers, evaluation highlights, page badges, and interactive confirmations; red shades for incorrect answers and secondary feedback. The typography must use large traditional fonts such as Arial to maximize readability. Headings should appear at approximately 30px and bold, while paragraph and instructional text should appear at approximately 20px bold, with base UI elements around 18px. Titles may optionally appear with thin weight (around font-weight 300) while preserving readability.
-The entire interface must follow a high-density compact layout. Spacing must be minimized by using reduced margins, tight line spacing, compact containers, and grid layouts wherever appropriate. The design must maximize the amount of visible learning content while keeping the layout clean and readable. Interactive elements such as buttons, answer choices, drill containers, and controls must include a subtle hover-scale animation (for example transform: scale(1.015)) so that they grow slightly when hovered, providing responsive visual feedback.
-The navigation system must include a fixed top bar containing the four tabs corresponding to the four sections of the lesson. Tabs must appear compact and narrow so that they consume minimal horizontal space. Directly beside the tabs there must be a Zoom Tool containing Zoom + and Zoom – buttons that dynamically resize the entire page content through JavaScript, allowing the teacher or learner to enlarge or reduce all text instantly. A floating circular toggle button fixed to the bottom-right corner of the screen must be included. When clicked, it must simultaneously hide both the top navigation bar and the footer to maximize screen space for lesson viewing, and clicking again must restore them.
-A fixed footer must appear at the bottom of the page containing the following credits exactly: “Developed by Dr. Mazen Badawy – Doctorate of English Teaching & Testing” and “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.” The footer must remain visually consistent with the blue theme and maintain readability without occupying excessive vertical space.
-The Board Organization tab must present content in a whiteboard-style teaching layout that resembles how a teacher would structure information on the classroom board. The top section must include a date picker using the dd/mm/yyyy format, followed by a centered lesson title with two lines: the first line displaying the lesson number and the second displaying the lesson title. Below the title, the board must include a warm-up question based on a WH-question format designed to activate prior knowledge.
-The vocabulary section must display words in a compact grid layout, preferably four columns, ensuring that the arrangement remains highly condensed and visually balanced. The Arabic translation of each vocabulary word must not appear automatically. Instead, each English word must be individually clickable, and when clicked its Arabic meaning must appear inline beside the word rather than underneath it. Clicking the same word again must hide the translation. The grid layout must remain visually aligned even when translations appear so that the structure remains compact and organized.
-Below the vocabulary grid the board must include a Grammar section containing two example sentences, each appearing on its own line. After this section an Evaluation prompt must be displayed asking students to write a short paragraph related to the lesson topic. The board must conclude with an Assignment section containing a single clear task written on one line.
-The Lesson Drills tab, which represents the content of the first PDF (Student Book), must obey a strict zero-omission rule. Every drill, instruction, sub-question, example, and activity from the first PDF must be included exactly. Nothing may be skipped, summarized, merged, or simplified. Each drill must appear as an interactive activity within the application. Activity formats may include multiple-choice questions, matching tasks, drag-and-drop exercises, cloze tests, sentence completion, sentence rearrangement, short-answer questions, paragraph writing tasks, or any other activity type that appears in the PDF.
-Every drill or activity heading must include a small blue page badge showing the exact page number from the original PDF so that teachers can easily trace the content back to the source page. For multiple-choice questions, the question stem must appear on one line, while all answer choices must appear on a single horizontal line underneath the stem using radio buttons. Each activity must include a Show Answer button. When the button is clicked, the system must evaluate the response: the correct answer must turn blue, and any selected incorrect answer must turn red.
-For cloze tests and vocabulary insertion activities, the system must include a drag-and-drop word bank with a dashed border containing the available words. Learners must be able to drag words into empty gaps within the text. In addition to drag-and-drop, a click-to-move fallback method must also exist where students can click a word in the bank and then click an empty gap to insert it. When the Show Answer button is pressed, the system must evaluate the responses: correct words must lock in place and turn blue, while incorrect words must automatically return to the word bank.
-Short-answer and paragraph writing activities must include expandable text areas where learners can type responses. Each writing task must include a Show Model Answer / Hide Model Answer toggle button that reveals a carefully written sample response designed to guide students’ learning. For reading passages, the system must include a play audio button that activates offline text-to-speech using window.speechSynthesis, allowing the passage to be read aloud without internet access. Each type of activity must display a small embedded icon representing its task type so that students can quickly recognize the activity format.
-The Exercises tab, which represents the second PDF (Workbook), must follow the same rules as the drills tab. It must include every single exercise from the workbook with absolutely no omissions. Instructions, questions, sub-questions, and examples must all appear. Each exercise must be converted into an interactive format following the same interface logic used for the drills tab, including page number badges, Show Answer buttons, blue correct responses, red incorrect responses, drag-and-drop exercises, model answers for writing tasks, and text-to-speech functionality for passages when appropriate.
-The Lesson Planning tab must generate a detailed, ready-to-teach lesson plan derived from the PDF contents. The plan must be organized into a clearly structured teaching framework that teachers can follow directly in class. The Objectives section must include interactive checkboxes, and when a checkbox is selected the objective text must turn grey and display a strikethrough line to indicate completion. The lesson plan must include page badges where relevant to show where the activities originate in the PDFs.
-The lesson plan must include the following sections organized in order: Objectives, Values, Life Skills, Review, Warm-up, Vocabulary & Structure with examples, Practice & Assessment, and Assignment. In addition, the planning section must integrate teaching strategies, required classroom resources, controlled practice activities, free practice opportunities, and feedback with consolidation steps so that the teacher has a complete instructional sequence. The tone must remain practical, concise, and directly usable for real classroom instruction.
-The final application must therefore be a fully offline, single-file, compact, interactive HTML teaching tool that preserves every element of both PDFs, converts drills and exercises into interactive tasks, provides accessible navigation and zoom controls, includes offline audio reading, and presents a clean high-contrast educational interface using a light-blue theme and large readable typography suitable for both teachers and learners.
-The final output must be a single fully self-contained HTML file.`
-            },
-            {
-                id: "prompt4",
-                title: "Listening Quiz Prompt",
-                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML listening comprehension test based on the content provided at the end.TECHNICAL REQUIREMENTS (MANDATORY):Zero External Dependencies: Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).Audio: Use a standard HTML5 <audio> tag referencing "00.mp3" locally.Logic: - MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.Single Attempt: Disable all buttons for that specific question after the first click.Zoom Tool: Include buttons to scale the font-size of the main content area (Base: 20px).Tabs: Provide two tabs: "Listening Test" and "Transcript".Hideable Header Interface:Create a Top Bar containing the Tabs and Zoom controls.Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.Create a Floating Audio Bar that sits under the Top Bar at full width. When the header is hidden, this audio bar must remain visible at the very top of the page.DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):Theme: Light blue background (#e0f2fe).Typography: Base font size 20px. Use high-contrast black text on white cards.Layout: Extremely compact with minimal vertical spacing between question cards and narrow line-height (approx 1.3).The correct answers are distributed equally among the four options (A, B, C, and D)
-Question Cards: - Background: White with a distinct border and shadow.Interactivity: "hover-scale" transition (grows slightly on hover).Buttons: - Navigation/Zoom: High-contrast Dark Blue.Correct/Accept: Green (#16a34a).Wrong/Cancel: Red (#dc2626).Titles: Thin, uppercase, spaced-out headers.Footer: Fixed at the bottom with: "All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing".CONTENT TO PROCESS:[PASTE TRANSCRIPT HERE][PASTE MCQ QUESTIONS HERE - Format: Question, 4 Options, Correct Index (0-3)]OUTPUT:Provide only the complete, self-contained, runnable HTML code.`
-            },
-            {
-                id: "prompt5",
-                title: "MCQ Test Prompt",
-                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML Grammar Quiz based on the questions provided at the end.
-
-TECHNICAL REQUIREMENTS (MANDATORY):
-
-Zero External Dependencies:
-Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).
-
-Logic:
-
-MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.
-
-Single Attempt: Disable all buttons for that specific question after the first click.
-
-Zoom Tool:
-Include buttons to scale the font-size of the main content area (Base: 20px).
-
-Tabs:
-Provide one main tab labeled: "Grammar Quiz".
-
-Hideable Header Interface:
-
-Create a Top Bar containing the Tab and Zoom controls.
-
-Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.
-
-DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):
-
-Theme:
-Light blue background (#e0f2fe).
-
-Typography:
-Base font size 20px.
-High-contrast black text on white cards.
-
-Layout:
-
-Extremely compact with minimal vertical spacing between question cards.
-
-Narrow line-height (approximately 1.3).
-
-Answer Distribution:
-The correct answers must be distributed equally among the four options (A, B, C, and D).
-
-Question Cards:
-
-Background: White
-
-Distinct border and shadow
-
-"Hover-scale" transition (slight growth on hover)
-
-Buttons:
-
-Navigation / Zoom: High-contrast Dark Blue
-
-Correct Answer: Green (#16a34a)
-
-Wrong Selection: Red (#dc2626)
-
-Titles:
-
-Thin, uppercase, spaced-out headers.
-
-Footer:
-
-Fixed at the bottom with the text:
-"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"
-
-CONTENT TO PROCESS:
-
-[PASTE GRAMMAR MCQ QUESTIONS HERE – Format:
-Question,
-4 Options,
-Correct Index (0–3)]
-
-OUTPUT REQUIREMENT:
-
-Provide only the complete, self-contained, runnable HTML code.`
-            },
-            {
-                id: "prompt6",
-                title: "MCQ Test Prompt 2 (With List)",
-                content: `Act as a senior Front-End Engineer and UX Architect. Your task is to generate a fully functional, production-level, single-file, 100% offline HTML Listening and Reading Comprehension Test Application. The final output must consist of one complete and self-contained \`index.html\` file that includes all HTML, CSS, and JavaScript. The application must run entirely offline without any external dependencies, frameworks, CDNs, libraries, Google Fonts, or internet calls. All styling must be written inside a \`<style>\` block using only system fonts such as Segoe UI and Arial. All logic must be written inside a single \`<script>\` tag, structured with clean modular functions and without global variable pollution or inline JavaScript attributes.
-
-The application must implement a strict question engine. Each question allows only one attempt. As soon as a user selects an answer, all options for that question must immediately become disabled. If the selected answer is incorrect, the chosen option must turn red and the correct answer must turn green. If the selected answer is correct, it must turn green. A feedback message must dynamically appear directly below the question after submission. Correct answers display green feedback text, while incorrect responses display red feedback text explaining the correct answer. The system must mathematically distribute correct answers equally among A, B, C, and D, regardless of the provided content. Each time a tab is clicked, both the order of questions and the position of answer options must be reshuffled while maintaining equal correct-answer distribution.
-
-The interface must include a fixed top navigation bar containing auto-generated category tabs, zoom controls labeled A- and A+, a CSV export button, and an Auto-Save toggle button. The base font size must be 20px and adjustable between 16px and 30px using smooth scaling animation. The layout must be fully responsive using CSS Grid and Flexbox. Question cards must have a white background, solid border, subtle shadow, hover-scale animation, and a grid layout ensuring that all four answer buttons are exactly equal in size.
-
-The system must automatically generate an additional tab named “Mixed Practice.” This tab must pull exactly five random questions from each available category without duplication. It must include a large green button labeled “Generate New Random Set,” which reshuffles the selection each time it is clicked while maintaining full functionality and distribution logic.
-
-When a student selects any answer, an un-dismissible modal window must appear requiring entry of a Student Number before proceeding. As the number is typed, the system must cross-reference a provided JSON database and dynamically display the corresponding Student Name. If the number is not found, a clear red warning must appear. The application must record data only if the student exists and the answer is correct. Incorrect answers must never be stored for export.
-
-The application must include a CSV export feature accessible from the top bar. The exported file must be UTF-8 with BOM encoding to ensure native compatibility with Excel. It must include the following columns: Date, Student Number, Student Name, Category, Question, Selected Answer, Correct Answer, and Status. Additionally, an Auto-Save feature using the File System Access API must be implemented. When the user clicks “Enable Auto-Save,” the browser must prompt them to select or create a local CSV file. Once linked, every correct answer must be appended automatically and silently to the selected file. The Auto-Save toggle must display red when disabled and green when enabled. If the browser does not support this API, a graceful warning must be displayed.
-
-The design must follow a bright, high-contrast, modern style using a light blue background (#e0f2fe). Headers must be uppercase, letter-spaced, thin-weighted, and highly readable. Buttons for correct, save, and generate actions must use green (#16a34a). Buttons for wrong, cancel, disable, or auto-save off must use red (#dc2626). Navigation elements must use dark blue (#1e3a8a). All interactive elements must include smooth hover-scale animations and color transitions. A fixed footer must appear at the bottom containing the exact text: “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
-
-A circular floating button containing the symbol ⛶ must appear in the bottom-right corner. When clicked, it must smoothly hide or show both the top navigation bar and the footer to create a distraction-free mode. If the test includes an audio component, a floating audio bar must appear directly under the top bar, spanning full width, using a standard HTML5 audio element referencing a local file. If distraction-free mode is activated, the audio bar must remain visible and snap to the top of the page. If no listening component is required, the audio bar must not be rendered.
-
-The input section must allow insertion of a JSON student database containing student numbers and names, followed by categorized test material separated by clear category headers. All questions must test the application of rules or concepts rather than definitions. Each question must include exactly four options. The final response must contain only the complete, runnable HTML code with no explanations, markdown, or additional commentary outside the file.`
             },
             {
                 id: "prompt7",
@@ -868,181 +673,6 @@ Produce **one complete HTML file** that:
                 id: "prompt8",
                 title: "Interactive Lecture Application",
                 content: `Act as a senior educational software engineer and front-end architect. Transform the instructional content provided at the end into a single-file, high-density, fully responsive interactive lecture web application that is production-ready, visually polished, pedagogically structured, and entirely self-contained. The application must apply a light blue gradient background transitioning from #f0f9ff to #bae6fd, with all content displayed inside white card containers for maximum readability. All body text must be bold, large, and high-contrast using pure black on white cards, while section titles must use very thin font weights to maximize usable content space. Every section card and interactive component must implement a smooth hover-scale effect using transform: scale(1.02). Buttons must follow a strict color system: Execute/Accept/Confirm in green (#22c55e), Cancel/Delete/Stop in red (#ef4444), and Standard/Selection/Navigation in blue (#007bff). A fixed footer must appear displaying the text “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing”. The header must be sticky with a maximum height of 70px and contain branding on the left, ScrollSpy navigation in the center, and circular zoom controls (+ and –) on the right that dynamically adjust the root HTML font size to scale the entire interface uniformly. The application must not include any bilingual language toggle or language-switching functionality, and all content must be presented in a single predefined language. Each lesson section must include a “Strategy” dropdown selector that dynamically updates a Teacher Instruction panel (amber background) and a Student Task panel (blue background) with step-by-step procedures using structured data. Text-to-Speech functionality must be integrated using the Gemini API endpoint, and every reading passage must include an independent 🔊 button that triggers natural voice narration. ScrollSpy navigation buttons must automatically highlight based on scroll position and enable smooth scrolling. The lesson structure must include Objectives presented as bullet points, a Warm-Up section with brainstorming or guided discussion questions, a Presentation section divided into passages that strictly preserve the original line endings of the provided text and include independent TTS buttons, and an Assessment section containing open-ended questions with “Show Model Answer” toggles, multiple-choice questions in a grid layout with immediate feedback (green for correct answers and red with shake animation for incorrect ones), and translation activities with textareas and model answer reveal buttons. The implementation must be delivered as a single HTML file with embedded CSS and vanilla JavaScript only, without external libraries, CDNs, or frameworks, and must function fully offline except for the Gemini TTS API call. All textual content must be stored inside a structured JavaScript object named contentData, and all UI rendering must dynamically reference this object. The application must be fully responsive and optimized for classroom projectors, tablets, and mobile devices while maintaining a high-density layout that maximizes visible content without clutter. Insert the new lesson content or extracted PDF text at the designated input location at the end of the file.`
-            },
-            {
-                id: "prompt9",
-                title: "Revision Test Application",
-                content: `Transform the attached PDF into a **single-file HTML interactive application**. The file must operate fully offline with **no external dependencies** (embed all CSS and JavaScript internally).
-
-### **1. Design & Layout Requirements**
-
-* **Theme:** Bright, clean, and stylish with a **light-blue gradient background** (e.g., \`#e1f5fe\` to \`#b3e5fc\`).
-* **Typography:** Modern, readable Arabic fonts (e.g., Segoe UI/Tahoma). **Titles must be thin** (\`font-weight: 300\`) and elegant.
-* **Responsiveness:** Fully responsive and mobile-friendly. Use **\`rem\` units** for all sizing (padding, margins, fonts) to allow global scaling.
-* **Header:** A sticky top bar containing:
-* Navigation tabs (Exams 1–5 + Comprehensive Test).
-* **Zoom Controls:** (+) and (-) buttons that scale the **entire interface** (fonts, layout, images) by adjusting the root font size.
-* **Toggle Visibility:** A button to **collapse/hide the header** to maximize reading space, with a floating button to bring it back.
-
-
-* **Footer:** A fixed footer reading: *"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"*.
-* **Animations:** Add a **hover scale transition** where interactive elements (cards, buttons, inputs) grow slightly when the mouse hovers over them.
-* **Visual Feedback:**
-* **Green:** Correct answers / Accept / Execute.
-* **Red:** Incorrect answers / Cancel / Stop / Shake animation on error.
-
-
-
-### **2. Content & Structure**
-
-Implement **5 distinct Exam tabs**, where each exam follows this structure (based on the provided text):
-
-1. **Listening/Reading Passages:** Display the full text of the passage (Listening script, Reading text, Poem, or Grammar context) inside a distinct, styled box **before** the questions.
-2. **Question Types:**
-* **True/False:** Radio buttons.
-* **MCQ (Choose):** Radio buttons.
-* **Short Answer / Extraction:** Text input fields.
-* **Creative Writing / Expression:** Text area fields.
-* **Spelling/Correction:** Text input fields.
-
-
-
-### **3. Functional Logic**
-
-* **Interactive grading:**
-* **MCQ/True-False:** Provide **immediate visual feedback** upon selection (turn the label Green if correct, Red with a shake animation if incorrect).
-* **Text Inputs (Short Answer):** Include a **"Show Answer" button** underneath that reveals the correct answer via a collapsible toggle.
-* **Writing Tasks:** Include a **"Show Model Answer" button** that reveals a sample response/rubric.
-
-
-* **Global Grading:** A "Finish & Check" button at the bottom of each tab that calculates the score based on inputs.
-* **Final Test Tab:**
-* This tab must **randomly select** a mix of questions from all previous exams.
-* Include a **"Reset" button** to generate a new random combination.
-
-
-* **Zoom Functionality:** The zoom buttons must adjust the \`html\` root font size so that the zoom effect applies to **passages, questions, and UI elements** simultaneously.
-
-### **4. Input Data**`
-            },
-            {
-                id: "prompt10",
-                title: "Revision Units Prompt",
-                content: `Transform the attached content/PDF into a single-file, HTML-based interactive revision application.
-The output must be one standalone HTML file, fully offline, with all CSS and JavaScript embedded.
-Do not use external libraries, CDNs, online assets, or external links.
-________________________________________
-Design & Layout
-•	Theme: Bright, clean, light-blue gradient background
-•	Typography: Traditional, readable fonts; thin/light titles
-•	Responsiveness: Fully responsive; large touch targets
-•	Header (sticky): Navigation tabs, Zoom (+/−), Difficulty Selector (Beginner | Intermediate | Advanced)
-•	Footer (fixed):
-“All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.”
-________________________________________
-Color Coding
-•	Green: Correct / Accept / Execute
-•	Red: Incorrect / Cancel / Stop
-________________________________________
-Difficulty System (Global)
-Three levels applied to all content:
-•	Beginner: Basic facts and direct meaning
-•	Intermediate: Understanding, function, relationships
-•	Advanced: Application, reasoning, justification
-The selected difficulty filters visible content, listening passages, and test generation.
-Default level: Beginner.
-________________________________________
-Application Structure (Create tabs for each of the question types that exist in the PDF The final exam must follow the same question type and number of questions in the uploaded PDF- ONLY the concepts tab is fixed)
-1. Concepts
-Visual study guide in cards using icons/emojis; progressive depth by difficulty.
-Use infographics when possible
-2. MCQ
-20–30 questions; instant feedback; explanation box; +1 per correct answer.
-3. True / False
-20–30 items; instant feedback; explanation; +1 per correct answer.
-4. Matching
-•	Matching activities must be displayed in two clear vertical columns:
-o	Left column: terms/prompts
-o	Right column: definitions/responses
-•	Learners select one item from each column to form a pair.
-•	Correct matches:
-o	Turn green
-o	Lock in place
-o	Incorrect matches:
-o	Turn red
-o	Display an error message
-o	Allow retry
-•	5–7 matching groups, difficulty-tagged, with partial scoring where appropriate.
-5. Cloze / Fill in the Blanks
-20–30 sentences with embedded dropdowns; validation button; explanation box; +1 per correct sentence.
-6. Short Answer
-15–25 questions focusing on definitions, concepts, functions, and purposes.
-Answers are hidden by default and revealed via collapsible “Show Answer / إظهار الإجابة” boxes.
-Answer text appears in green.
-7. Listening
-Listening tasks derived from the reading material using offline text-to-speech.
-•	3–6 listening passages per difficulty level
-•	Audio controls: Play, Pause, Stop, Speed (0.75×–1.5×)
-•	Voice/Accent selector (English and Arabic voices where available)
-•	Repeat-sentence / Shadowing mode for pronunciation and fluency practice
-Listening Script Visibility
-•	The full listening script must be hidden by default
-•	Script is revealed only through a collapsible text area labeled:
-Show Script / إظهار النص
-•	When revealed, the script appears in a styled box consistent with the theme
-Listening Comprehension
-•	3–5 questions per passage (MCQ or True/False)
-•	Immediate feedback and explanation
-•	+1 per correct answer
-8. Translation (الترجمة)
-Short passages for Arabic ↔ English translation.
-•	Direction clearly stated (EN→AR / AR→EN)
-•	Passages graded by difficulty
-•	Model translation hidden by default
-•	Answers revealed using collapsible boxes labeled:
-Show Translation / إظهار الترجمة
-•	Translation text appears in green
-9. Test
-Randomized assessment generated from the same central database:
-•	5 MCQs
-•	5 True/False
-•	5 Cloze
-•	1 Matching group
-•	Listening items may appear at advanced level
-Each test regenerates with different questions.
-________________________________________
-Listening-Specific Requirements
-•	Fully offline text-to-speech (browser-based)
-•	Accent/voice selection saved locally
-•	Shadowing mode with sentence-by-sentence playback and pauses
-•	Script hidden in collapsible section (default state)
-________________________________________
-Scoring & Progress Tracking
-•	Live score display (attempts, correct, percentage)
-•	Performance colors:
-o	≥80% Green | 50–79% Orange | <50% Red
-•	Offline progress tracking using local storage
-•	Visual progress dashboard
-•	Reset Progress button
-________________________________________
-Teacher Mode (Offline)
-PIN-protected toggle enabling:
-•	Reveal all answers and scripts
-•	Show explanations by default
-•	Disable scoring (practice-only mode)
-•	Reset learner data
-________________________________________
-Technical Requirements
-•	All content stored in one central JavaScript database
-•	Full support for Arabic (RTL) and English (LTR)
-•	Robust, stable, and bug-free
-•	Entire application contained in a single HTML file
-________________________________________
-Restrictions
-❌ No external libraries
-❌ No CDNs
-❌ No online assets or links
-________________________________________`
             },
             {
                 id: "prompt11",
@@ -1469,6 +1099,549 @@ Used together, they reliably produce a **complete bilingual interactive teaching
 ---
 
 If you want, I can also show you a **third “master prompt” that merges both into one ultra-stable prompt** (this improves AI output reliability significantly).`
+            },
+            {
+                id: "prompt2",
+                title: "Lecture Prompt",
+                content: `Transform the provided PDF contents into a single-file HTML lesson presentation containing three tabbed sections. All resources (images, audio, icons, fonts, JavaScript, and CSS) must be embedded offline within the file. Use traditional, readable fonts and apply a light-blue gradient theme.
+
+Tab 1: Lesson Presentation
+
+Display the lesson text in separate paragraphs.
+
+For each sentence, select at least one keyword and add:
+
+A hover-triggered pop-up showing its Arabic meaning and a representative icon.
+
+Insert a text-to-speech (TTS) button under each passage.
+
+Include an MCQ activity based on the lesson content from the PDF.
+
+Tab 2: Conversation
+
+Place a fixed image placeholder on the right side for file 00.png.
+
+ include a floating audio control that plays the external conversation file 00.mp3.
+If I scroll the question, the image and the MP3 control tool must be fixed within the displayed area.
+the Conversation Tab as requested. The screen width is now distributed so that the MCQ items take up 66.66% (two-thirds) and the Audio Control sidebar take up 33.33% (one-third)
+Consider that the file will be played on Android, take necessary steps to handle MP3 running on Android without any problem regarding security blocks.
+
+Add an MCQ section with a scrollable container for items.
+
+Provide a collapsible drop-down panel showing the full conversation script, including a play button for revision.
+
+Tab 3: Grammar
+
+Create interactive grammar drills, vocabulary activities, and supplementary materials derived from the PDF.
+
+Support exercises with icons and responsive elements.
+
+Implement drag-and-drop interactions where applicable.
+
+Add a “Show Answer” button for each drill.
+
+General Requirements (Apply Across All Sections)
+
+Under every short-answer and translation question, include a collapsible drop-down to reveal the correct answer.
+
+Add “Show Answer” functionality to all drills and activities. When selected in MCQ, give green for the right answer and red for the wrong one. The MCQ logic:  as soon as you click an option, it will immediately turn Green (if correct) or Red (if incorrect).
+
+optimized the vertical layout to save screen height. The title, tabs, and content sections are more compact, allowing more questions to fit on the screen at once.
+Larger Content Text: Increased reading passages, MCQ questions, and options by approximately 10-15% for better readability.
+Compact Headers: Kept titles and tabs small to maintain the improved screen real estate.
+Ensure the entire design uses a light-blue gradient background theme.`
+            },
+            {
+                id: "prompt5",
+                title: "MCQ Test Prompt",
+                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML Grammar Quiz based on the questions provided at the end.
+
+TECHNICAL REQUIREMENTS (MANDATORY):
+
+Zero External Dependencies:
+Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).
+
+Logic:
+
+MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.
+
+Single Attempt: Disable all buttons for that specific question after the first click.
+
+Zoom Tool:
+Include buttons to scale the font-size of the main content area (Base: 20px).
+
+Tabs:
+Provide one main tab labeled: "Grammar Quiz".
+
+Hideable Header Interface:
+
+Create a Top Bar containing the Tab and Zoom controls.
+
+Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.
+
+DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):
+
+Theme:
+Light blue background (#e0f2fe).
+
+Typography:
+Base font size 20px.
+High-contrast black text on white cards.
+
+Layout:
+
+Extremely compact with minimal vertical spacing between question cards.
+
+Narrow line-height (approximately 1.3).
+
+Answer Distribution:
+The correct answers must be distributed equally among the four options (A, B, C, and D).
+
+Question Cards:
+
+Background: White
+
+Distinct border and shadow
+
+"Hover-scale" transition (slight growth on hover)
+
+Buttons:
+
+Navigation / Zoom: High-contrast Dark Blue
+
+Correct Answer: Green (#16a34a)
+
+Wrong Selection: Red (#dc2626)
+
+Titles:
+
+Thin, uppercase, spaced-out headers.
+
+Footer:
+
+Fixed at the bottom with the text:
+"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"
+
+CONTENT TO PROCESS:
+
+[PASTE GRAMMAR MCQ QUESTIONS HERE – Format:
+Question,
+4 Options,
+Correct Index (0–3)]
+
+OUTPUT REQUIREMENT:
+
+Provide only the complete, self-contained, runnable HTML code.`
+            },
+            {
+                id: "prompt6",
+                title: "MCQ Test Prompt 2 (With List)",
+                content: `Act as a senior Front-End Engineer and UX Architect. Your task is to generate a fully functional, production-level, single-file, 100% offline HTML Listening and Reading Comprehension Test Application. The final output must consist of one complete and self-contained \`index.html\` file that includes all HTML, CSS, and JavaScript. The application must run entirely offline without any external dependencies, frameworks, CDNs, libraries, Google Fonts, or internet calls. All styling must be written inside a \`<style>\` block using only system fonts such as Segoe UI and Arial. All logic must be written inside a single \`<script>\` tag, structured with clean modular functions and without global variable pollution or inline JavaScript attributes.
+
+The application must implement a strict question engine. Each question allows only one attempt. As soon as a user selects an answer, all options for that question must immediately become disabled. If the selected answer is incorrect, the chosen option must turn red and the correct answer must turn green. If the selected answer is correct, it must turn green. A feedback message must dynamically appear directly below the question after submission. Correct answers display green feedback text, while incorrect responses display red feedback text explaining the correct answer. The system must mathematically distribute correct answers equally among A, B, C, and D, regardless of the provided content. Each time a tab is clicked, both the order of questions and the position of answer options must be reshuffled while maintaining equal correct-answer distribution.
+
+The interface must include a fixed top navigation bar containing auto-generated category tabs, zoom controls labeled A- and A+, a CSV export button, and an Auto-Save toggle button. The base font size must be 20px and adjustable between 16px and 30px using smooth scaling animation. The layout must be fully responsive using CSS Grid and Flexbox. Question cards must have a white background, solid border, subtle shadow, hover-scale animation, and a grid layout ensuring that all four answer buttons are exactly equal in size.
+
+The system must automatically generate an additional tab named “Mixed Practice.” This tab must pull exactly five random questions from each available category without duplication. It must include a large green button labeled “Generate New Random Set,” which reshuffles the selection each time it is clicked while maintaining full functionality and distribution logic.
+
+When a student selects any answer, an un-dismissible modal window must appear requiring entry of a Student Number before proceeding. As the number is typed, the system must cross-reference a provided JSON database and dynamically display the corresponding Student Name. If the number is not found, a clear red warning must appear. The application must record data only if the student exists and the answer is correct. Incorrect answers must never be stored for export.
+
+The application must include a CSV export feature accessible from the top bar. The exported file must be UTF-8 with BOM encoding to ensure native compatibility with Excel. It must include the following columns: Date, Student Number, Student Name, Category, Question, Selected Answer, Correct Answer, and Status. Additionally, an Auto-Save feature using the File System Access API must be implemented. When the user clicks “Enable Auto-Save,” the browser must prompt them to select or create a local CSV file. Once linked, every correct answer must be appended automatically and silently to the selected file. The Auto-Save toggle must display red when disabled and green when enabled. If the browser does not support this API, a graceful warning must be displayed.
+
+The design must follow a bright, high-contrast, modern style using a light blue background (#e0f2fe). Headers must be uppercase, letter-spaced, thin-weighted, and highly readable. Buttons for correct, save, and generate actions must use green (#16a34a). Buttons for wrong, cancel, disable, or auto-save off must use red (#dc2626). Navigation elements must use dark blue (#1e3a8a). All interactive elements must include smooth hover-scale animations and color transitions. A fixed footer must appear at the bottom containing the exact text: “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
+
+A circular floating button containing the symbol ⛶ must appear in the bottom-right corner. When clicked, it must smoothly hide or show both the top navigation bar and the footer to create a distraction-free mode. If the test includes an audio component, a floating audio bar must appear directly under the top bar, spanning full width, using a standard HTML5 audio element referencing a local file. If distraction-free mode is activated, the audio bar must remain visible and snap to the top of the page. If no listening component is required, the audio bar must not be rendered.
+
+The input section must allow insertion of a JSON student database containing student numbers and names, followed by categorized test material separated by clear category headers. All questions must test the application of rules or concepts rather than definitions. Each question must include exactly four options. The final response must contain only the complete, runnable HTML code with no explanations, markdown, or additional commentary outside the file.`
+            },
+            {
+                id: "prompt9",
+                title: "Revision Test Application",
+                content: `Transform the attached PDF into a **single-file HTML interactive application**. The file must operate fully offline with **no external dependencies** (embed all CSS and JavaScript internally).
+
+### **1. Design & Layout Requirements**
+
+* **Theme:** Bright, clean, and stylish with a **light-blue gradient background** (e.g., \`#e1f5fe\` to \`#b3e5fc\`).
+* **Typography:** Modern, readable Arabic fonts (e.g., Segoe UI/Tahoma). **Titles must be thin** (\`font-weight: 300\`) and elegant.
+* **Responsiveness:** Fully responsive and mobile-friendly. Use **\`rem\` units** for all sizing (padding, margins, fonts) to allow global scaling.
+* **Header:** A sticky top bar containing:
+* Navigation tabs (Exams 1–5 + Comprehensive Test).
+* **Zoom Controls:** (+) and (-) buttons that scale the **entire interface** (fonts, layout, images) by adjusting the root font size.
+* **Toggle Visibility:** A button to **collapse/hide the header** to maximize reading space, with a floating button to bring it back.
+
+
+* **Footer:** A fixed footer reading: *"All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing"*.
+* **Animations:** Add a **hover scale transition** where interactive elements (cards, buttons, inputs) grow slightly when the mouse hovers over them.
+* **Visual Feedback:**
+* **Green:** Correct answers / Accept / Execute.
+* **Red:** Incorrect answers / Cancel / Stop / Shake animation on error.
+
+
+
+### **2. Content & Structure**
+
+Implement **5 distinct Exam tabs**, where each exam follows this structure (based on the provided text):
+
+1. **Listening/Reading Passages:** Display the full text of the passage (Listening script, Reading text, Poem, or Grammar context) inside a distinct, styled box **before** the questions.
+2. **Question Types:**
+* **True/False:** Radio buttons.
+* **MCQ (Choose):** Radio buttons.
+* **Short Answer / Extraction:** Text input fields.
+* **Creative Writing / Expression:** Text area fields.
+* **Spelling/Correction:** Text input fields.
+
+
+
+### **3. Functional Logic**
+
+* **Interactive grading:**
+* **MCQ/True-False:** Provide **immediate visual feedback** upon selection (turn the label Green if correct, Red with a shake animation if incorrect).
+* **Text Inputs (Short Answer):** Include a **"Show Answer" button** underneath that reveals the correct answer via a collapsible toggle.
+* **Writing Tasks:** Include a **"Show Model Answer" button** that reveals a sample response/rubric.
+
+
+* **Global Grading:** A "Finish & Check" button at the bottom of each tab that calculates the score based on inputs.
+* **Final Test Tab:**
+* This tab must **randomly select** a mix of questions from all previous exams.
+* Include a **"Reset" button** to generate a new random combination.
+
+
+* **Zoom Functionality:** The zoom buttons must adjust the \`html\` root font size so that the zoom effect applies to **passages, questions, and UI elements** simultaneously.
+
+### **4. Input Data**`
+            },
+            {
+                id: "prompt10",
+                title: "Revision Units Prompt",
+                content: `Transform the attached content/PDF into a single-file, HTML-based interactive revision application.
+The output must be one standalone HTML file, fully offline, with all CSS and JavaScript embedded.
+Do not use external libraries, CDNs, online assets, or external links.
+________________________________________
+Design & Layout
+•	Theme: Bright, clean, light-blue gradient background
+•	Typography: Traditional, readable fonts; thin/light titles
+•	Responsiveness: Fully responsive; large touch targets
+•	Header (sticky): Navigation tabs, Zoom (+/−), Difficulty Selector (Beginner | Intermediate | Advanced)
+•	Footer (fixed):
+“All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.”
+________________________________________
+Color Coding
+•	Green: Correct / Accept / Execute
+•	Red: Incorrect / Cancel / Stop
+________________________________________
+Difficulty System (Global)
+Three levels applied to all content:
+•	Beginner: Basic facts and direct meaning
+•	Intermediate: Understanding, function, relationships
+•	Advanced: Application, reasoning, justification
+The selected difficulty filters visible content, listening passages, and test generation.
+Default level: Beginner.
+________________________________________
+Application Structure (Create tabs for each of the question types that exist in the PDF The final exam must follow the same question type and number of questions in the uploaded PDF- ONLY the concepts tab is fixed)
+1. Concepts
+Visual study guide in cards using icons/emojis; progressive depth by difficulty.
+Use infographics when possible
+2. MCQ
+20–30 questions; instant feedback; explanation box; +1 per correct answer.
+3. True / False
+20–30 items; instant feedback; explanation; +1 per correct answer.
+4. Matching
+•	Matching activities must be displayed in two clear vertical columns:
+o	Left column: terms/prompts
+o	Right column: definitions/responses
+•	Learners select one item from each column to form a pair.
+•	Correct matches:
+o	Turn green
+o	Lock in place
+o	Incorrect matches:
+o	Turn red
+o	Display an error message
+o	Allow retry
+•	5–7 matching groups, difficulty-tagged, with partial scoring where appropriate.
+5. Cloze / Fill in the Blanks
+20–30 sentences with embedded dropdowns; validation button; explanation box; +1 per correct sentence.
+6. Short Answer
+15–25 questions focusing on definitions, concepts, functions, and purposes.
+Answers are hidden by default and revealed via collapsible “Show Answer / إظهار الإجابة” boxes.
+Answer text appears in green.
+7. Listening
+Listening tasks derived from the reading material using offline text-to-speech.
+•	3–6 listening passages per difficulty level
+•	Audio controls: Play, Pause, Stop, Speed (0.75×–1.5×)
+•	Voice/Accent selector (English and Arabic voices where available)
+•	Repeat-sentence / Shadowing mode for pronunciation and fluency practice
+Listening Script Visibility
+•	The full listening script must be hidden by default
+•	Script is revealed only through a collapsible text area labeled:
+Show Script / إظهار النص
+•	When revealed, the script appears in a styled box consistent with the theme
+Listening Comprehension
+•	3–5 questions per passage (MCQ or True/False)
+•	Immediate feedback and explanation
+•	+1 per correct answer
+8. Translation (الترجمة)
+Short passages for Arabic ↔ English translation.
+•	Direction clearly stated (EN→AR / AR→EN)
+•	Passages graded by difficulty
+•	Model translation hidden by default
+•	Answers revealed using collapsible boxes labeled:
+Show Translation / إظهار الترجمة
+•	Translation text appears in green
+9. Test
+Randomized assessment generated from the same central database:
+•	5 MCQs
+•	5 True/False
+•	5 Cloze
+•	1 Matching group
+•	Listening items may appear at advanced level
+Each test regenerates with different questions.
+________________________________________
+Listening-Specific Requirements
+•	Fully offline text-to-speech (browser-based)
+•	Accent/voice selection saved locally
+•	Shadowing mode with sentence-by-sentence playback and pauses
+•	Script hidden in collapsible section (default state)
+________________________________________
+Scoring & Progress Tracking
+•	Live score display (attempts, correct, percentage)
+•	Performance colors:
+o	≥80% Green | 50–79% Orange | <50% Red
+•	Offline progress tracking using local storage
+•	Visual progress dashboard
+•	Reset Progress button
+________________________________________
+Teacher Mode (Offline)
+PIN-protected toggle enabling:
+•	Reveal all answers and scripts
+•	Show explanations by default
+•	Disable scoring (practice-only mode)
+•	Reset learner data
+________________________________________
+Technical Requirements
+•	All content stored in one central JavaScript database
+•	Full support for Arabic (RTL) and English (LTR)
+•	Robust, stable, and bug-free
+•	Entire application contained in a single HTML file
+________________________________________
+Restrictions
+❌ No external libraries
+❌ No CDNs
+❌ No online assets or links
+________________________________________`
+            },
+            {
+                id: "prompt12",
+                title: "Test Generator Prompt with names list",
+                content: `Below is the complete refined prompt written as structured passages, making it clearer, more reliable for generation, and easier for AI systems to follow step-by-step while preserving all your design and functionality requirements.
+The Dual-File Offline Test Generator Prompt
+Act as an expert Front-End Developer, Educational Software Engineer, and Instructional Designer. Generate a fully functional, single-file, 100% offline HTML application that serves as an interactive reading and listening comprehension test. The application must process two uploaded files: a PDF containing instructional content and an Excel or CSV file containing a student database. The final output must consist of only one self-contained index.html file containing all HTML, CSS, JavaScript, and data arrays. No external files, frameworks, or dependencies may be used. The generated code must run completely offline in a modern browser without requiring internet access.
+The application must be visually polished, pedagogically structured, technically robust, and easy for instructors to distribute to students as a single standalone file. All functionality, styling, and logic must be embedded directly inside the HTML file using internal <style> and <script> sections.
+File Processing and Data Extraction
+The program must process the two uploaded files as follows.
+The Excel or CSV file represents the student database. It contains two columns labeled Student_Number and Student_Name. The application must extract these values and convert them into a JavaScript object called studentsList where the student number becomes the key and the student name becomes the value. Any empty rows must be ignored, leading or trailing spaces must be trimmed, and student numbers must be stored as strings to avoid formatting errors.
+For example, the dataset must be converted internally into the following structure:
+
+const studentsList = {
+"2023001": "Ahmed Ali",
+"2023002": "Sara Hassan",
+"2023003": "Omar Mahmoud"
+};
+The PDF file contains the instructional content that forms the basis of the test. The program must extract all readable textual content from the PDF and identify headings, sections, or topic divisions. Each identified section must become a question category and must appear as a separate navigation tab in the interface.
+From the content of each section, generate high-quality application-based multiple choice questions. The questions must test the learner’s ability to apply the concept rather than simply recall a definition. Suitable formats include completing sentences, identifying correct usage, detecting errors, correcting incorrect expressions, or choosing the appropriate form in context.
+Each question must contain exactly four options, labeled A, B, C, and D. The internal data structure for each question must include the category name, the question text, four answer options, and the index of the correct answer.
+A standard internal question structure must resemble the following format:
+
+{
+category: "Word Formation",
+question: "Choose the correct form of the word to complete the sentence.",
+options: ["electrify", "electrical", "electricity", "electric"],
+correctAnswer: 1
+}
+Each tab must contain a number of questions that is a multiple of four. If the initial question pool does not reach this number, duplicate or regenerate equivalent questions to reach the nearest multiple.
+Technical Architecture Requirements
+The generated application must operate under strict technical constraints.
+The entire system must be contained inside a single HTML file. No external frameworks such as Bootstrap, Tailwind, or React may be used. No external fonts or CDN resources are allowed. The application must rely exclusively on standard HTML, vanilla JavaScript, and internal CSS.
+All interactive logic must be implemented using plain JavaScript. The application must run entirely offline and must not attempt to fetch any remote resources.
+Questions and answer options must be randomized every time a tab is loaded. The randomization must follow the Fisher-Yates shuffle algorithm to ensure unbiased ordering. The placement of the correct answer among the four options must also be shuffled dynamically, and the program must recalculate the correct answer index after shuffling.
+Across the full set of questions within each tab, correct answers must be distributed as evenly as possible among options A, B, C, and D so that approximately 25 percent of answers fall in each position.
+Visual Design System
+The user interface must follow a clear visual design system.
+The application background must be a light blue color (#e0f2fe) to produce a bright and comfortable learning environment. All instructional content must be displayed inside white card containers with subtle borders and soft drop shadows to improve readability.
+The base font size must be 20 pixels, using system fonts such as Segoe UI, Arial, or similar sans-serif fonts. Headings must appear in uppercase with thin typography and increased letter spacing to maintain clarity while saving vertical space.
+Interactive buttons must follow a strict color coding system. Green buttons represent positive actions such as save, confirm, or correct answers. Red buttons represent negative actions such as cancel or incorrect responses. Dark blue buttons represent navigation controls or export functions.
+Answer options must be arranged using a CSS Grid layout that ensures all four option buttons have identical height and width. This grid must automatically stretch options to fill available space so the layout remains balanced regardless of screen size.
+Interactive elements such as buttons, tabs, and cards must include smooth hover animations where the element slightly enlarges when the mouse pointer moves over it. These animations must use subtle scaling transitions to improve usability without distracting the learner.
+A fixed footer must appear at the bottom of the screen containing the exact text:
+“All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.”
+Layout and Interface Structure
+The application interface must include a structured layout consisting of several core components.
+A fixed header bar must appear at the top of the page. This header contains the navigation tabs representing each question category, a button labeled “Enable Auto-Save,” a button labeled “Download Backup,” and two zoom controls labeled “A-” and “A+” that allow users to decrease or increase the base font size of the application.
+The central content area must contain the question card displaying the question text, the four answer options, and the feedback area.
+A floating circular toggle button must appear in the bottom-right corner of the screen. When clicked, this button must hide or reveal both the header and footer simultaneously, allowing a distraction-free mode for students during testing.
+Mixed Practice Section
+In addition to the tabs generated from the PDF sections, the application must automatically generate a final tab titled Mixed Practice.
+This tab must randomly select exactly five questions from each category and combine them into a new mixed practice set. The selection must avoid duplicates and must be regenerated each time the user presses a prominent button labeled “Generate New Random Set.”
+The questions within this mixed tab must follow the same interaction rules as all other questions.
+Student Identification and Answer Verification
+Each question must enforce a strict single-attempt policy. As soon as a user selects an answer option, all other options for that question must immediately become disabled to prevent multiple attempts.
+Immediately after selecting an answer, a modal dialog box must appear prompting the student to enter their Student Number. The modal must not be dismissible until a valid student number is entered.
+As the student types their number, the system must dynamically look up the corresponding name from the studentsList object. The student name must appear below the input field in a large, bold font so the student can confirm their identity before the answer is recorded.
+If the student number is not found in the database, the system must display a red warning message indicating that the number is invalid and must prevent submission.
+Visual Feedback System
+Once a valid student number is confirmed, the application must display instant visual feedback.
+If the answer is correct, the selected option must turn green and a large green feedback box must appear below the question. This feedback box must include celebratory emojis and a congratulatory message addressing the student by name.
+If the answer is incorrect, the selected option must turn red while the correct option becomes highlighted in green. A red feedback box must appear explaining that the answer was incorrect and displaying the correct answer.
+The feedback messages must incorporate large emojis and personalized text including the student’s name.
+Data Recording Rules
+The system must maintain an internal dataset of responses. However, only correct answers may be recorded. Incorrect answers must be ignored and must not be saved to the dataset.
+Each stored record must include the date and time, the student number, the student name, the question category, the question text, the selected answer, the correct answer, and the status value “Correct.”
+The application must also prevent duplicate submissions by ensuring that a student cannot record the same question more than once.
+Automatic Saving and Backup Export
+The header must include a button labeled Enable Auto-Save. When pressed, the application must attempt to use the browser’s File System Access API to allow the instructor to select or create a CSV file on their computer.
+If the browser supports this feature, every correct answer must be appended to the file automatically. If the browser does not support the File System Access API, the system must gracefully fall back to storing data in memory until it is exported manually.
+A second button labeled Download Backup must generate and download a CSV file containing all recorded responses. The file must use UTF-8 BOM encoding and must include the following header columns:
+Date, Student_Number, Student_Name, Category, Question, Selected_Answer, Correct_Answer, Status
+Accessibility and Performance
+The application must support keyboard navigation and include accessible labels for screen readers. Feedback messages must use appropriate ARIA attributes so that screen readers announce them correctly.
+The interface must remain responsive on different screen sizes and must avoid rendering excessive numbers of questions simultaneously. Questions should be loaded dynamically for each tab to maintain smooth performance.
+Output Requirement
+The final response must contain only the complete runnable HTML source code. The code must begin directly with the <!DOCTYPE html> declaration and must not include explanations, commentary, or text outside the code block. The file must be immediately usable as a standalone offline application when saved as index.html.
+If you want, I can also show you three powerful upgrades that make this prompt produce dramatically better test applications (especially for large classes).
+Make sure to order the headings according to their categies :
+Lectures, lessons, quizzes`
+            },
+            {
+                id: "prompt4",
+                title: "Listening Quiz Prompt",
+                content: `Act as an expert Front-End Developer. Generate a single-file, 100% offline HTML listening comprehension test based on the content provided at the end.TECHNICAL REQUIREMENTS (MANDATORY):Zero External Dependencies: Do NOT use any CDNs (Tailwind, Bootstrap, etc.) or Google Fonts. Use standard CSS within a <style> block and system fonts (Segoe UI, Arial, sans-serif).Audio: Use a standard HTML5 <audio> tag referencing "00.mp3" locally.Logic: - MCQ Feedback: When a user clicks an option, immediately highlight the correct answer in Green and the selected (if wrong) in Red.Single Attempt: Disable all buttons for that specific question after the first click.Zoom Tool: Include buttons to scale the font-size of the main content area (Base: 20px).Tabs: Provide two tabs: "Listening Test" and "Transcript".Hideable Header Interface:Create a Top Bar containing the Tabs and Zoom controls.Include a Toggle Button ("Hide/Show Controls") that slides the Top Bar out of view.Create a Floating Audio Bar that sits under the Top Bar at full width. When the header is hidden, this audio bar must remain visible at the very top of the page.DESIGN SPECIFICATIONS (HIGH CONTRAST & COMPACT):Theme: Light blue background (#e0f2fe).Typography: Base font size 20px. Use high-contrast black text on white cards.Layout: Extremely compact with minimal vertical spacing between question cards and narrow line-height (approx 1.3).The correct answers are distributed equally among the four options (A, B, C, and D)
+Question Cards: - Background: White with a distinct border and shadow.Interactivity: "hover-scale" transition (grows slightly on hover).Buttons: - Navigation/Zoom: High-contrast Dark Blue.Correct/Accept: Green (#16a34a).Wrong/Cancel: Red (#dc2626).Titles: Thin, uppercase, spaced-out headers.Footer: Fixed at the bottom with: "All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing".CONTENT TO PROCESS:[PASTE TRANSCRIPT HERE][PASTE MCQ QUESTIONS HERE - Format: Question, 4 Options, Correct Index (0-3)]OUTPUT:Provide only the complete, self-contained, runnable HTML code.`
+            },
+            {
+                id: "prompt3",
+                title: "Lesson Prompt",
+                content: `Transform the provided two PDF files into a single-file HTML lesson presentation containing four compact tabbed sections:
+1.	Board Organization
+2.	Lesson Drills (First PDF — Include ALL Drills Without Skipping Any Item)
+3.	Exercises (Second PDF — Include ALL Exercises Without Skipping Any Item)
+4.	Lesson Planning
+The file must operate fully offline, with all resources embedded directly (images, audio, icons, fonts, JavaScript, CSS, text-to-speech scripts). No CDNs or external links are allowed.
+Use a bright, stylish light-blue gradient background.
+Apply a compact layout with reduced spacing, minimal margins, and tight line spacing.
+Use large, bold, high-contrast traditional fonts (Arial or similar) for maximum readability.
+Follow spacing parameters:
+•	Headings: h = 30 (bold)
+•	Paragraph/body text: p = 20 (Arial, bold)
+•	Compact vertical spacing throughout
+Add a footer header:
+“Developed by Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
+The interface must be:
+•	Fully responsive
+•	Android-compatible
+•	Audio and text-to-speech must function properly offline
+•	Visually polished and neatly structured
+•	High-contrast and easy to read
+Decrease the tab size and place a Zoom Tool (Zoom + / Zoom –) directly beside the tabs to dynamically resize all content.
+Add a “Hide Top Bar” button that:
+•	Hides the entire top navigation area (tabs + zoom controls)
+•	Expands the lesson content to full width
+•	Toggles back when clicked again (Show Top Bar)
+________________________________________
+TAB 1 — Board Organization
+Display content in whiteboard-style layout with compact spacing.
+Include:
+•	Date picker (dd/mm/yyyy format)
+•	Centered lesson title
+•	Line 1: Lesson [Number]
+•	Line 2: [Title]
+•	Warm-up: One WH-question
+•	Vocabulary: Six words arranged in three lines (two English words per line with wide spacing)
+Vocabulary Translation Requirements:
+•	Arabic meanings must NOT appear automatically
+•	Translation must appear beside the English word (not under it)
+•	Translation appears inline, next to the word with clear spacing
+•	Each word is independently clickable
+•	Clicking shows the translation beside it
+•	Clicking again hides the translation
+•	The layout must remain compact and aligned when translation appears
+Include:
+•	Grammar: Two example sentences (one per line)
+•	Evaluation: One paragraph writing prompt
+•	Assignment: One-line task under a heading
+________________________________________
+TAB 2 — Lesson Drills (First PDF)
+⚠️ CRITICAL REQUIREMENT:
+You must include EVERY SINGLE DRILL from the first PDF.
+No drill, instruction, sub-question, example, or activity may be skipped, summarized, merged, or omitted.
+Convert every drill into interactive activities:
+•	MCQs
+•	Matching
+•	Drag-and-drop
+•	Cloze tests
+•	Sentence completion
+•	Rearrangement
+•	Short-answer questions
+•	Writing tasks
+•	Any additional drill types found in the PDF
+Interaction Rules:
+For MCQs / Matching / Cloze:
+•	All answer choices must appear on one line
+•	“Show Answer” button under each activity
+•	When clicked:
+o	Correct answer turns green
+o	Incorrect selections turn red
+o	Correct answer displayed inside the same item
+For short-answer / paragraph tasks:
+•	Provide collapsible “Model Answer” reveal box
+•	Writing tasks must include expandable text areas with sample answers
+Add embedded icons for each activity type.
+Ensure fully responsive behavior and compact structure.
+________________________________________
+TAB 3 — Exercises (Second PDF)
+⚠️ CRITICAL REQUIREMENT:
+You must include EVERY SINGLE EXERCISE from the second PDF.
+No question, example, instruction, or task may be skipped, condensed, or combined.
+Convert all exercises into an interactive format using the same interaction rules as Tab 2.
+Maintain:
+•	One-line answer choices
+•	Show Answer button
+•	Green/red feedback
+•	Collapsible model answers for writing tasks
+•	Drag-and-drop where appropriate
+•	Fully responsive compact layout
+Absolutely no exercise may be omitted.
+________________________________________
+TAB 4 — Lesson Planning
+Create a detailed, ready-to-teach lesson plan, structured clearly and compactly.
+Include:
+Objectives
+•	Displayed as interactive checkboxes
+•	When checked → text becomes strikethrough
+Teaching Strategies
+Required Resources
+Warm-up Plan
+Vocabulary (with examples)
+Language Structure (with examples)
+Controlled Practice
+Free Practice
+Feedback & Consolidation
+Assignment
+The lesson plan must be detailed, practical, and classroom-ready.
+________________________________________
+General Technical Requirements
+•	Fully offline functionality
+•	No external references or CDNs
+•	All assets embedded internally
+•	Compact, bold, high-contrast design
+•	Reduced spacing
+•	Smaller tabs
+•	Zoom tool beside tabs (Zoom + / Zoom –)
+•	Hide/Show Top Bar toggle button
+•	Android-compatible
+•	Audio and text-to-speech must function offline
+•	Clean, structured, readable layout
+•	Bright light-blue gradient theme
+•	Large bold contrastive font throughout
+The final output must be a single fully self-contained HTML file.`
             }
         ];
 
@@ -1483,7 +1656,6 @@ If you want, I can also show you a **third “master prompt” that merges both 
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn hover-scale';
                 btn.id = `btn-${prompt.id}`;
-                // Add a folder-like icon for aesthetics
                 btn.innerHTML = `
                     <span>${prompt.title}</span>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
@@ -1495,37 +1667,31 @@ If you want, I can also show you a **third “master prompt” that merges both 
 
         // Handle Selection
         function selectPrompt(id) {
-            // Find Data
             const promptData = promptsData.find(p => p.id === id);
             if(!promptData) return;
 
-            // Reset Active Class
             if (currentActiveId) {
                 const prevBtn = document.getElementById(`btn-${currentActiveId}`);
                 if (prevBtn) prevBtn.classList.remove('active');
             }
 
-            // Set New Active Class
             const currentBtn = document.getElementById(`btn-${id}`);
             if (currentBtn) currentBtn.classList.add('active');
             currentActiveId = id;
 
-            // Update DOM Elements
             document.getElementById('empty-view').style.display = 'none';
             document.getElementById('active-view').style.display = 'flex';
             
             document.getElementById('active-title').textContent = promptData.title;
             document.getElementById('active-content').textContent = promptData.content;
-            document.getElementById('copy-btn').style.display = 'inline-flex'; // Show button when a prompt is selected
+            document.getElementById('copy-btn').style.display = 'inline-flex';
             
-            // Scroll to top of content
             document.querySelector('.prompt-body').scrollTop = 0;
             
-            // Reset Copy Button State
             resetCopyButton();
         }
 
-        // Copy functionality with Clipboard API & Fallback
+        // Copy functionality
         function copyActivePrompt() {
             if (!currentActiveId) return;
             const promptData = promptsData.find(p => p.id === currentActiveId);
@@ -1543,7 +1709,6 @@ If you want, I can also show you a **third “master prompt” that merges both 
             };
 
             const handleFailure = () => {
-                // Fallback for iFrames / stricter environments
                 try {
                     const textArea = document.createElement("textarea");
                     textArea.value = promptData.content;
@@ -1555,7 +1720,7 @@ If you want, I can also show you a **third “master prompt” that merges both 
                     handleSuccess();
                 } catch (err) {
                     copyBtn.textContent = 'Failed to copy';
-                    copyBtn.style.backgroundColor = '#ef4444'; // Red error
+                    copyBtn.style.backgroundColor = '#ef4444';
                     setTimeout(resetCopyButton, 2500);
                 }
             };
@@ -1571,6 +1736,7 @@ If you want, I can also show you a **third “master prompt” that merges both 
 
         function resetCopyButton() {
             const copyBtn = document.getElementById('copy-btn');
+            if(!copyBtn) return;
             copyBtn.innerHTML = `
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copy Prompt
@@ -1578,27 +1744,21 @@ If you want, I can also show you a **third “master prompt” that merges both 
             copyBtn.style.backgroundColor = 'var(--btn-green)';
         }
 
-        // Toggle Sidebar Function
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             sidebar.classList.toggle('hidden');
         }
 
-        // Toggle Fullscreen / Distraction-Free Mode
         function toggleFullscreenMode() {
             document.body.classList.toggle('fullscreen-mode');
             const icon = document.getElementById('fs-icon');
             
             if (document.body.classList.contains('fullscreen-mode')) {
-                // Change to collapse icon
                 icon.innerHTML = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>';
             } else {
-                // Change to expand icon
                 icon.innerHTML = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>';
             }
         }
     </script>
 </body>
-
 </html>
-
