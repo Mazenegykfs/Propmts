@@ -573,127 +573,23 @@ Ensure the entire design uses a light-blue gradient background theme.`
                 id: "prompt3",
                 title: "Lesson Prompt",
                 content: `Transform the provided two PDF files into a single-file HTML lesson presentation containing four compact tabbed sections:
-1.	Board Organization
-2.	Lesson Drills (First PDF — Include ALL Drills Without Skipping Any Item)
-3.	Exercises (Second PDF — Include ALL Exercises Without Skipping Any Item)
-4.	Lesson Planning
-The file must operate fully offline, with all resources embedded directly (images, audio, icons, fonts, JavaScript, CSS, text-to-speech scripts). No CDNs or external links are allowed.
-Use a bright, stylish light-blue gradient background.
-Apply a compact layout with reduced spacing, minimal margins, and tight line spacing.
-Use large, bold, high-contrast traditional fonts (Arial or similar) for maximum readability.
-Follow spacing parameters:
-•	Headings: h = 30 (bold)
-•	Paragraph/body text: p = 20 (Arial, bold)
-•	Compact vertical spacing throughout
-Add a footer header:
-“Developed by Dr. Mazen Badawy – Doctorate of English Teaching & Testing”.
-The interface must be:
-•	Fully responsive
-•	Android-compatible
-•	Audio and text-to-speech must function properly offline
-•	Visually polished and neatly structured
-•	High-contrast and easy to read
-Decrease the tab size and place a Zoom Tool (Zoom + / Zoom –) directly beside the tabs to dynamically resize all content.
-Add a “Hide Top Bar” button that:
-•	Hides the entire top navigation area (tabs + zoom controls)
-•	Expands the lesson content to full width
-•	Toggles back when clicked again (Show Top Bar)
-________________________________________
-TAB 1 — Board Organization
-Display content in whiteboard-style layout with compact spacing.
-Include:
-•	Date picker (dd/mm/yyyy format)
-•	Centered lesson title
-•	Line 1: Lesson [Number]
-•	Line 2: [Title]
-•	Warm-up: One WH-question
-•	Vocabulary: Six words arranged in three lines (two English words per line with wide spacing)
-Vocabulary Translation Requirements:
-•	Arabic meanings must NOT appear automatically
-•	Translation must appear beside the English word (not under it)
-•	Translation appears inline, next to the word with clear spacing
-•	Each word is independently clickable
-•	Clicking shows the translation beside it
-•	Clicking again hides the translation
-•	The layout must remain compact and aligned when translation appears
-Include:
-•	Grammar: Two example sentences (one per line)
-•	Evaluation: One paragraph writing prompt
-•	Assignment: One-line task under a heading
-________________________________________
-TAB 2 — Lesson Drills (First PDF)
-⚠️ CRITICAL REQUIREMENT:
-You must include EVERY SINGLE DRILL from the first PDF.
-No drill, instruction, sub-question, example, or activity may be skipped, summarized, merged, or omitted.
-Convert every drill into interactive activities:
-•	MCQs 
-•	Matching (drag and drop)
-•	Drag-and-drop
-•	Cloze tests
-•	Sentence completion
-•	Rearrangement
-•	Short-answer questions
-•	Writing tasks
-•	Any additional drill types found in the PDF
-Interaction Rules:
-For MCQs / Matching / Cloze:
-•	All answer choices must appear on one line (the stem on a line and the options all on the line under teh stem)
-•	“Show Answer” button under each activity
-•	When clicked:
-o	Correct answer turns green
-o	Incorrect selections turn red
-o	Correct answer displayed inside the same item
-For short-answer / paragraph tasks:
-•	Provide collapsible “Model Answer” reveal box
-•	Writing tasks must include expandable text areas with sample answers
-Add embedded icons for each activity type.
-Ensure fully responsive behavior and compact structure.
-________________________________________
-TAB 3 — Exercises (Second PDF)
-⚠️ CRITICAL REQUIREMENT:
-You must include EVERY SINGLE EXERCISE from the second PDF.
-No question, example, instruction, or task may be skipped, condensed, or combined.
-Convert all exercises into an interactive format using the same interaction rules as Tab 2.
-Maintain:
-•	One-line answer choices
-•	Show Answer button
-•	Green/red feedback
-•	Collapsible model answers for writing tasks
-•	Drag-and-drop where appropriate
-•	Fully responsive compact layout
-Absolutely no exercise may be omitted.
-________________________________________
-TAB 4 — Lesson Planning
-Create a detailed, ready-to-teach lesson plan, structured clearly and compactly.
-Include:
-Objectives
-•	Displayed as interactive checkboxes
-•	When checked → text becomes strikethrough
-Teaching Strategies
-Required Resources
-Warm-up Plan
-Vocabulary (with examples)
-Language Structure (with examples)
-Controlled Practice
-Free Practice
-Feedback & Consolidation
-Assignment
-The lesson plan must be detailed, practical, and classroom-ready.
-________________________________________
-General Technical Requirements
-•	Fully offline functionality
-•	No external references or CDNs
-•	All assets embedded internally
-•	Compact, bold, high-contrast design
-•	Reduced spacing
-•	Smaller tabs
-•	Zoom tool beside tabs (Zoom + / Zoom –)
-•	Hide/Show Top Bar toggle button
-•	Android-compatible
-•	Audio and text-to-speech must function offline
-•	Clean, structured, readable layout
-•	Bright light-blue gradient theme
-•	Large bold contrastive font throughout
+Transform the two provided PDF files into a single-file HTML interactive lesson presentation organized into four compact tabbed sections: Board Organization, Lesson Drills (First PDF — Student Book), Exercises (Second PDF — Workbook), and Lesson Planning. The system must extract all instructional content from both PDFs and convert it into an interactive educational application designed for classroom teaching and student practice. The generated file must preserve every instruction, question, example, and activity appearing in the PDFs while converting them into a structured, interactive interface suitable for teaching and self-study.
+The application must operate entirely offline as a single HTML file. All JavaScript, CSS, fonts, icons, images, audio resources, and scripts must be fully embedded within the file itself. External CDNs, external links, and remote dependencies are strictly forbidden. The application must function correctly on desktop browsers and Android devices with all features operational without internet access, including audio playback and offline text-to-speech using the browser’s built-in speech synthesis engine.
+The user interface must use a bright, stylish light-blue gradient background (for example from #f0f9ff to #bae6fd) and maintain a high-contrast, visually polished teaching interface. The color system must follow strict rules: blue shades for primary actions, correct answers, evaluation highlights, page badges, and interactive confirmations; red shades for incorrect answers and secondary feedback. The typography must use large traditional fonts such as Arial to maximize readability. Headings should appear at approximately 30px and bold, while paragraph and instructional text should appear at approximately 20px bold, with base UI elements around 18px. Titles may optionally appear with thin weight (around font-weight 300) while preserving readability.
+The entire interface must follow a high-density compact layout. Spacing must be minimized by using reduced margins, tight line spacing, compact containers, and grid layouts wherever appropriate. The design must maximize the amount of visible learning content while keeping the layout clean and readable. Interactive elements such as buttons, answer choices, drill containers, and controls must include a subtle hover-scale animation (for example transform: scale(1.015)) so that they grow slightly when hovered, providing responsive visual feedback.
+The navigation system must include a fixed top bar containing the four tabs corresponding to the four sections of the lesson. Tabs must appear compact and narrow so that they consume minimal horizontal space. Directly beside the tabs there must be a Zoom Tool containing Zoom + and Zoom – buttons that dynamically resize the entire page content through JavaScript, allowing the teacher or learner to enlarge or reduce all text instantly. A floating circular toggle button fixed to the bottom-right corner of the screen must be included. When clicked, it must simultaneously hide both the top navigation bar and the footer to maximize screen space for lesson viewing, and clicking again must restore them.
+A fixed footer must appear at the bottom of the page containing the following credits exactly: “Developed by Dr. Mazen Badawy – Doctorate of English Teaching & Testing” and “All rights are reserved to Dr. Mazen Badawy – Doctorate of English Teaching & Testing.” The footer must remain visually consistent with the blue theme and maintain readability without occupying excessive vertical space.
+The Board Organization tab must present content in a whiteboard-style teaching layout that resembles how a teacher would structure information on the classroom board. The top section must include a date picker using the dd/mm/yyyy format, followed by a centered lesson title with two lines: the first line displaying the lesson number and the second displaying the lesson title. Below the title, the board must include a warm-up question based on a WH-question format designed to activate prior knowledge.
+The vocabulary section must display words in a compact grid layout, preferably four columns, ensuring that the arrangement remains highly condensed and visually balanced. The Arabic translation of each vocabulary word must not appear automatically. Instead, each English word must be individually clickable, and when clicked its Arabic meaning must appear inline beside the word rather than underneath it. Clicking the same word again must hide the translation. The grid layout must remain visually aligned even when translations appear so that the structure remains compact and organized.
+Below the vocabulary grid the board must include a Grammar section containing two example sentences, each appearing on its own line. After this section an Evaluation prompt must be displayed asking students to write a short paragraph related to the lesson topic. The board must conclude with an Assignment section containing a single clear task written on one line.
+The Lesson Drills tab, which represents the content of the first PDF (Student Book), must obey a strict zero-omission rule. Every drill, instruction, sub-question, example, and activity from the first PDF must be included exactly. Nothing may be skipped, summarized, merged, or simplified. Each drill must appear as an interactive activity within the application. Activity formats may include multiple-choice questions, matching tasks, drag-and-drop exercises, cloze tests, sentence completion, sentence rearrangement, short-answer questions, paragraph writing tasks, or any other activity type that appears in the PDF.
+Every drill or activity heading must include a small blue page badge showing the exact page number from the original PDF so that teachers can easily trace the content back to the source page. For multiple-choice questions, the question stem must appear on one line, while all answer choices must appear on a single horizontal line underneath the stem using radio buttons. Each activity must include a Show Answer button. When the button is clicked, the system must evaluate the response: the correct answer must turn blue, and any selected incorrect answer must turn red.
+For cloze tests and vocabulary insertion activities, the system must include a drag-and-drop word bank with a dashed border containing the available words. Learners must be able to drag words into empty gaps within the text. In addition to drag-and-drop, a click-to-move fallback method must also exist where students can click a word in the bank and then click an empty gap to insert it. When the Show Answer button is pressed, the system must evaluate the responses: correct words must lock in place and turn blue, while incorrect words must automatically return to the word bank.
+Short-answer and paragraph writing activities must include expandable text areas where learners can type responses. Each writing task must include a Show Model Answer / Hide Model Answer toggle button that reveals a carefully written sample response designed to guide students’ learning. For reading passages, the system must include a play audio button that activates offline text-to-speech using window.speechSynthesis, allowing the passage to be read aloud without internet access. Each type of activity must display a small embedded icon representing its task type so that students can quickly recognize the activity format.
+The Exercises tab, which represents the second PDF (Workbook), must follow the same rules as the drills tab. It must include every single exercise from the workbook with absolutely no omissions. Instructions, questions, sub-questions, and examples must all appear. Each exercise must be converted into an interactive format following the same interface logic used for the drills tab, including page number badges, Show Answer buttons, blue correct responses, red incorrect responses, drag-and-drop exercises, model answers for writing tasks, and text-to-speech functionality for passages when appropriate.
+The Lesson Planning tab must generate a detailed, ready-to-teach lesson plan derived from the PDF contents. The plan must be organized into a clearly structured teaching framework that teachers can follow directly in class. The Objectives section must include interactive checkboxes, and when a checkbox is selected the objective text must turn grey and display a strikethrough line to indicate completion. The lesson plan must include page badges where relevant to show where the activities originate in the PDFs.
+The lesson plan must include the following sections organized in order: Objectives, Values, Life Skills, Review, Warm-up, Vocabulary & Structure with examples, Practice & Assessment, and Assignment. In addition, the planning section must integrate teaching strategies, required classroom resources, controlled practice activities, free practice opportunities, and feedback with consolidation steps so that the teacher has a complete instructional sequence. The tone must remain practical, concise, and directly usable for real classroom instruction.
+The final application must therefore be a fully offline, single-file, compact, interactive HTML teaching tool that preserves every element of both PDFs, converts drills and exercises into interactive tasks, provides accessible navigation and zoom controls, includes offline audio reading, and presents a clean high-contrast educational interface using a light-blue theme and large readable typography suitable for both teachers and learners.
 The final output must be a single fully self-contained HTML file.`
             },
             {
@@ -1705,3 +1601,4 @@ If you want, I can also show you a **third “master prompt” that merges both 
 </body>
 
 </html>
+
